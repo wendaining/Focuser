@@ -6,7 +6,7 @@ impl BlockList {
     /// Check if a domain should be blocked by this block list.
     /// Returns `true` if any website rule matches AND no exception overrides it.
     pub fn should_block_domain(&self, domain: &str) -> bool {
-        if !self.enabled {
+        if !self.is_effectively_active() {
             return false;
         }
 
@@ -24,13 +24,16 @@ impl BlockList {
     }
 
     /// Check if an application should be blocked.
+    ///
+    /// Honors the schedule: a list whose schedule is set but not currently
+    /// active will not block any app, even if `enabled` is true.
     pub fn should_block_app(
         &self,
         process_name: &str,
         exe_path: Option<&str>,
         window_title: Option<&str>,
     ) -> bool {
-        if !self.enabled {
+        if !self.is_effectively_active() {
             return false;
         }
 
@@ -180,7 +183,88 @@ mod tests {
         let mut list = BlockList::new("Disabled");
         list.enabled = false;
         list.websites.push(WebsiteRule::domain("reddit.com"));
+        list.applications.push(AppRule::executable("steam.exe"));
 
         assert!(!list.should_block_domain("reddit.com"));
+        assert!(!list.should_block_app("steam.exe", None, None));
+    }
+
+    /// Build a schedule with non-empty time slots that never match the
+    /// current time, so `is_active_now()` is deterministically false.
+    /// `start == end` makes `contains_time` return false on that day, and
+    /// every weekday is covered so the result doesn't depend on when the
+    /// test runs.
+    fn never_active_schedule() -> crate::types::Schedule {
+        use chrono::{NaiveTime, Weekday};
+        let zero = NaiveTime::from_hms_opt(0, 0, 0).unwrap();
+        let days = [
+            Weekday::Mon,
+            Weekday::Tue,
+            Weekday::Wed,
+            Weekday::Thu,
+            Weekday::Fri,
+            Weekday::Sat,
+            Weekday::Sun,
+        ];
+        crate::types::Schedule {
+            id: crate::types::new_id(),
+            name: "NeverActive".into(),
+            time_slots: days
+                .iter()
+                .map(|d| crate::types::TimeSlot::new(*d, zero, zero))
+                .collect(),
+            enabled: true,
+        }
+    }
+
+    /// Regression: a scheduled list whose schedule is currently inactive
+    /// must not block apps. Previously `should_block_app` only consulted
+    /// `enabled` and ignored the schedule, so apps got force-closed even
+    /// outside the configured time slots (issue #1).
+    #[test]
+    fn test_scheduled_inactive_does_not_block_app() {
+        let mut list = BlockList::new("Scheduled");
+        list.enabled = true;
+        list.applications.push(AppRule::executable("discord.exe"));
+        list.schedule = Some(never_active_schedule());
+
+        assert!(!list.is_effectively_active());
+        assert!(!list.should_block_app("discord.exe", None, None));
+    }
+
+    /// Regression: same fix applied to `should_block_domain` for symmetry.
+    /// Domain blocking through the hosts file already used
+    /// `is_effectively_active`, but the in-memory `should_block_domain`
+    /// path (used by other callers) was inconsistent.
+    #[test]
+    fn test_scheduled_inactive_does_not_block_domain() {
+        let mut list = BlockList::new("Scheduled");
+        list.enabled = true;
+        list.websites.push(WebsiteRule::domain("reddit.com"));
+        list.schedule = Some(never_active_schedule());
+
+        assert!(!list.should_block_domain("reddit.com"));
+    }
+
+    /// A schedule with no time slots is treated as "always active" while
+    /// the list is enabled — make sure the fix didn't regress that case.
+    #[test]
+    fn test_schedule_no_slots_still_blocks() {
+        use crate::types::Schedule;
+
+        let mut list = BlockList::new("AlwaysOn");
+        list.enabled = true;
+        list.applications.push(AppRule::executable("discord.exe"));
+        list.websites.push(WebsiteRule::domain("reddit.com"));
+        list.schedule = Some(Schedule {
+            id: crate::types::new_id(),
+            name: "Test".into(),
+            time_slots: vec![],
+            enabled: true,
+        });
+
+        assert!(list.is_effectively_active());
+        assert!(list.should_block_app("discord.exe", None, None));
+        assert!(list.should_block_domain("reddit.com"));
     }
 }
