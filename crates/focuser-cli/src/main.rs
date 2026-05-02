@@ -475,7 +475,7 @@ async fn main() -> Result<()> {
                         let used = item["used_today_secs"].as_u64().unwrap_or(0);
                         let remaining = item["remaining_secs"].as_u64().unwrap_or(0);
                         let exhausted = item["exhausted"].as_bool().unwrap_or(false);
-                        let pct = if limit > 0 { used * 100 / limit } else { 0 };
+                        let pct = (used * 100).checked_div(limit).unwrap_or(0);
                         let status = if exhausted { "[BLOCKED]" } else { "          " };
                         println!(
                             "  {status} {kind:<6} {target:<30} {:>3}m/{:>3}m  ({pct}%, {rem}m left)",
