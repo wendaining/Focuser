@@ -18,6 +18,15 @@ pub fn sync_hosts_now_static(eng: &focuser_core::BlockEngine) {
     let _ = crate::blocker::apply_hosts_blocks(&domains);
 }
 
+/// Single source of truth for the app version. Returns the workspace
+/// `Cargo.toml` package version at compile time, so bumping the version
+/// in `Cargo.toml` automatically propagates to the UI's About section
+/// (and anywhere else the frontend asks for it).
+#[tauri::command]
+pub fn get_app_version() -> &'static str {
+    env!("CARGO_PKG_VERSION")
+}
+
 fn check_protected(eng: &focuser_core::BlockEngine, id: uuid::Uuid) -> Result<(), String> {
     if eng.is_block_list_protected(id) {
         Err("Protection is active — cannot modify this block list until it expires".to_string())

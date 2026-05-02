@@ -1,6 +1,5 @@
 {
   "productName": "Focuser",
-  "version": "0.1.7",
   "identifier": "com.focuser.app",
   "build": {
     "frontendDist": "./ui"

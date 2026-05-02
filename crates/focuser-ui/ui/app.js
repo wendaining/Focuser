@@ -2395,6 +2395,16 @@ function closeAllDropdowns() {
 // ─── Init ───────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', async function() {
+  // Pull the app version from Cargo.toml (via the get_app_version Tauri
+  // command) so the About section and any other version display stays in
+  // sync with the workspace version automatically. No more hardcoded
+  // version strings to update on each release.
+  try {
+    var v = await invoke('get_app_version');
+    var av = document.getElementById('about-version');
+    if (av && v) av.textContent = 'Focuser v' + v;
+  } catch (e) { /* non-tauri context, leave the static label */ }
+
   var b = document.getElementById('btn-new-blocklist'); if (b) b.addEventListener('click', function() { ui.showCreateListModal(); });
   var bw = document.getElementById('btn-add-website'); if (bw) bw.addEventListener('click', function() { ui.addWebsite(); });
 

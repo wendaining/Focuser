@@ -142,6 +142,7 @@ fn main() {
             commands::open_browser_url,
             commands::check_for_update,
             commands::do_update,
+            commands::get_app_version,
             commands::pomodoro_get_status,
             commands::pomodoro_start,
             commands::pomodoro_pause,
