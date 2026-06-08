@@ -341,9 +341,9 @@ var ui = {
   },
 
   showCreateListModal: function() {
-    document.getElementById('modal-title').textContent = 'New Block List';
-    document.getElementById('modal-body').innerHTML = '<label style="display:block;margin-bottom:6px;font-size:12px;color:var(--text-muted);">Name</label><input type="text" id="modal-list-name" class="input" style="width:100%;" placeholder="e.g. Social Media">';
-    document.getElementById('modal-confirm').textContent = 'Create';
+    document.getElementById('modal-title').textContent = t('modal.newBlockList');
+    document.getElementById('modal-body').innerHTML = '<label style="display:block;margin-bottom:6px;font-size:12px;color:var(--text-muted);">' + t('modal.nameLabel') + '</label><input type="text" id="modal-list-name" class="input" style="width:100%;" placeholder="' + t('modal.namePlaceholder') + '">';
+    document.getElementById('modal-confirm').textContent = t('common.create');
     document.getElementById('modal-confirm').setAttribute('data-action', 'confirm-create-list');
     document.getElementById('modal-confirm').style.cssText = '';
     document.getElementById('modal-overlay').classList.remove('hidden');
@@ -353,18 +353,18 @@ var ui = {
   async createList() {
     var i = document.getElementById('modal-list-name');
     var name = i ? i.value.trim() : '';
-    if (!name) { toast('Enter a name', 'error'); return; }
-    try { await invoke('create_block_list', { name: name }); toast('Created', 'success'); this.closeModal(); this.refreshBlockLists(); }
-    catch (e) { toast('Failed: ' + e, 'error'); }
+    if (!name) { toast(t('toast.enterName'), 'error'); return; }
+    try { await invoke('create_block_list', { name: name }); toast(t('toast.created'), 'success'); this.closeModal(); this.refreshBlockLists(); }
+    catch (e) { toast(t('common.failed', { error: e }), 'error'); }
   },
 
   closeModal: function() { document.getElementById('modal-overlay').classList.add('hidden'); },
 
   showFocusLockModal: function(listId, listName) {
-    document.getElementById('modal-title').textContent = 'Focus Lock';
+    document.getElementById('modal-title').textContent = t('modal.focusLock');
     document.getElementById('modal-body').innerHTML =
-      '<p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">' + ico('lock', 15) + ' Lock <strong style="color:var(--text-primary);">' + esc(listName) + '</strong> for a set duration. While locked, this block list cannot be modified, disabled, or deleted.</p>' +
-      '<label style="display:block;margin-bottom:6px;font-size:12px;color:var(--text-muted);">Duration</label>' +
+      '<p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">' + ico('lock', 15) + ' ' + t('modal.focusLockBody', { name: esc(listName) }) + '</p>' +
+      '<label style="display:block;margin-bottom:6px;font-size:12px;color:var(--text-muted);">' + t('modal.duration') + '</label>' +
       '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">' +
         '<button class="btn btn-sm focus-lock-dur" data-minutes="30" style="font-size:12px;">30m</button>' +
         '<button class="btn btn-sm focus-lock-dur" data-minutes="60" style="font-size:12px;">1h</button>' +
@@ -373,11 +373,11 @@ var ui = {
         '<button class="btn btn-sm focus-lock-dur" data-minutes="480" style="font-size:12px;">8h</button>' +
         '<button class="btn btn-sm focus-lock-dur" data-minutes="1440" style="font-size:12px;">24h</button>' +
       '</div>' +
-      '<label style="display:block;margin-bottom:6px;font-size:12px;color:var(--text-muted);">Or enter minutes</label>' +
+      '<label style="display:block;margin-bottom:6px;font-size:12px;color:var(--text-muted);">' + t('modal.orEnterMinutes') + '</label>' +
       '<input type="number" id="focus-lock-custom-mins" class="input" style="width:120px;" value="120" min="1" max="14400">' +
-      '<p style="font-size:11px;color:var(--text-muted);margin-top:14px;opacity:0.7;">' + ico('alert-triangle', 12) + ' Once locked, you cannot undo this until the timer expires.</p>';
+      '<p style="font-size:11px;color:var(--text-muted);margin-top:14px;opacity:0.7;">' + ico('alert-triangle', 12) + ' ' + t('modal.focusLockWarning') + '</p>';
 
-    document.getElementById('modal-confirm').textContent = 'Activate Lock';
+    document.getElementById('modal-confirm').textContent = t('modal.activateLock');
     document.getElementById('modal-confirm').setAttribute('data-action', 'confirm-focus-lock');
     document.getElementById('modal-confirm').setAttribute('data-list-id', listId);
     document.getElementById('modal-confirm').style.cssText = 'background:var(--error-dim);color:var(--error);';
@@ -398,10 +398,10 @@ var ui = {
   async activateFocusLock(listId) {
     var minsInput = document.getElementById('focus-lock-custom-mins');
     var mins = minsInput ? parseInt(minsInput.value, 10) : 120;
-    if (!mins || mins < 1) { toast('Enter a valid duration', 'error'); return; }
+    if (!mins || mins < 1) { toast(t('toast.enterValidDuration'), 'error'); return; }
 
-    var ok = await showConfirm('Confirm Focus Lock',
-      'Lock this block list for ' + mins + ' minutes? You will NOT be able to undo this until the timer expires.');
+    var ok = await showConfirm(t('confirm.focusLock'),
+      t('confirm.focusLockMsg', { mins: mins }));
     if (!ok) return;
 
     try {
@@ -412,11 +412,11 @@ var ui = {
         preventServiceStop: false,
         preventModification: true,
       });
-      toast('Focus Lock activated for ' + mins + ' minutes', 'success');
+      toast(t('toast.focusLockActivated', { mins: mins }), 'success');
       this.closeModal();
       this.refreshBlockLists();
     } catch (e) {
-      toast('Failed: ' + e, 'error');
+      toast(t('common.failed', { error: e }), 'error');
     }
   },
 
@@ -452,11 +452,11 @@ var ui = {
     var isScheduled = selList && selList.schedule !== null && selList.schedule !== undefined;
     var slotCount = isScheduled && selList.schedule.time_slots ? selList.schedule.time_slots.length : 0;
     schedBar.style.display = 'flex';
-    schedBar.innerHTML = '<span style="color:var(--text-muted);">Schedule:</span>' +
+    schedBar.innerHTML = '<span style="color:var(--text-muted);">' + t('websites.schedule') + ':</span>' +
       (isScheduled
-        ? '<span style="color:var(--accent);font-weight:500;">Scheduled' + (slotCount > 0 ? ' (' + slotCount + ' slots)' : ' (no hours set)') + '</span>'
-        : '<span style="color:var(--success);font-weight:500;">Always Active</span>') +
-      '<button class="btn btn-sm" data-action="edit-schedule" data-list-id="' + selectedList + '" style="font-size:11px;margin-left:auto;">Edit Schedule</button>';
+        ? '<span style="color:var(--accent);font-weight:500;">' + t('status.scheduled') + (slotCount > 0 ? ' (' + t('websites.slots', { count: slotCount }) + ')' : ' (' + t('websites.noHoursSet') + ')') + '</span>'
+        : '<span style="color:var(--success);font-weight:500;">' + t('websites.alwaysActiveShort') + '</span>') +
+      '<button class="btn btn-sm" data-action="edit-schedule" data-list-id="' + selectedList + '" style="font-size:11px;margin-left:auto;">' + t('websites.editSchedule') + '</button>';
 
     this.renderFilteredWebsites('');
   },
@@ -488,15 +488,15 @@ var ui = {
     var lid = document.getElementById('website-list-select').value;
     var rt = document.getElementById('website-type-select').value;
     var v = document.getElementById('website-input').value.trim();
-    if (!lid) { toast('Select a list', 'error'); return; }
-    if (!v) { toast('Enter a website', 'error'); return; }
-    try { await invoke('add_website_rule', { listId: lid, ruleType: rt, value: v }); document.getElementById('website-input').value = ''; toast('Blocked ' + v, 'success'); await this.refreshBlockLists(); this.refreshWebsites(); }
-    catch (e) { toast('Failed: ' + e, 'error'); }
+    if (!lid) { toast(t('toast.selectListFirst'), 'error'); return; }
+    if (!v) { toast(t('toast.enterWebsite'), 'error'); return; }
+    try { await invoke('add_website_rule', { listId: lid, ruleType: rt, value: v }); document.getElementById('website-input').value = ''; toast(t('toast.blocked', { name: v }), 'success'); await this.refreshBlockLists(); this.refreshWebsites(); }
+    catch (e) { toast(t('common.failed', { error: e }), 'error'); }
   },
 
   async removeWebsite(lid, rid) {
-    try { await invoke('remove_website_rule', { listId: lid, ruleId: rid }); toast('Removed', 'success'); await this.refreshBlockLists(); this.refreshWebsites(); }
-    catch (e) { toast('Failed: ' + e, 'error'); }
+    try { await invoke('remove_website_rule', { listId: lid, ruleId: rid }); toast(t('toast.removed'), 'success'); await this.refreshBlockLists(); this.refreshWebsites(); }
+    catch (e) { toast(t('common.failed', { error: e }), 'error'); }
   },
 
   refreshApps: function() {
@@ -543,36 +543,36 @@ var ui = {
   async addApp() {
     var lid = document.getElementById('app-list-select').value;
     var v = document.getElementById('app-input').value.trim();
-    if (!lid) { toast('Select a list', 'error'); return; }
-    if (!v) { toast('Enter an application', 'error'); return; }
+    if (!lid) { toast(t('toast.selectListFirst'), 'error'); return; }
+    if (!v) { toast(t('toast.enterApp'), 'error'); return; }
     // Auto-detect type: if it ends with .exe it's exe_name, if it has path separators it's exe_path
     var rt = 'exe_name';
     if (v.indexOf('\\') !== -1 || v.indexOf('/') !== -1) rt = 'exe_path';
-    try { await invoke('add_app_rule', { listId: lid, ruleType: rt, value: v }); document.getElementById('app-input').value = ''; toast('Blocked ' + v, 'success'); await this.refreshBlockLists(); this.refreshApps(); }
-    catch (e) { toast('Failed: ' + e, 'error'); }
+    try { await invoke('add_app_rule', { listId: lid, ruleType: rt, value: v }); document.getElementById('app-input').value = ''; toast(t('toast.blocked', { name: v }), 'success'); await this.refreshBlockLists(); this.refreshApps(); }
+    catch (e) { toast(t('common.failed', { error: e }), 'error'); }
   },
 
   async removeApp(lid, rid) {
-    try { await invoke('remove_app_rule', { listId: lid, ruleId: rid }); toast('Removed', 'success'); await this.refreshBlockLists(); this.refreshApps(); }
-    catch (e) { toast('Failed: ' + e, 'error'); }
+    try { await invoke('remove_app_rule', { listId: lid, ruleId: rid }); toast(t('toast.removed'), 'success'); await this.refreshBlockLists(); this.refreshApps(); }
+    catch (e) { toast(t('common.failed', { error: e }), 'error'); }
   },
 
   async browseApps() {
     var lid = document.getElementById('app-list-select').value;
-    if (!lid) { toast('Select a list first', 'error'); return; }
+    if (!lid) { toast(t('toast.selectListFirst'), 'error'); return; }
 
     try {
       // Use Tauri's Rust-side file picker command
       var result = await invoke('pick_app_file');
       if (result) {
         await invoke('add_app_rule', { listId: lid, ruleType: 'exe_name', value: result });
-        toast('Blocked ' + result, 'success');
+        toast(t('toast.blocked', { name: result }), 'success');
         await this.refreshBlockLists();
         this.refreshApps();
       }
     } catch (e) {
       if (e && e.toString().indexOf('cancel') === -1) {
-        toast('Failed: ' + e, 'error');
+        toast(t('common.failed', { error: e }), 'error');
       }
     }
   },
@@ -750,14 +750,14 @@ var ui = {
 
   _saveSchedule: async function(forceAlwaysActive) {
     var sel = document.getElementById('schedule-list-select');
-    if (!sel || !sel.value) { toast('Select a list first', 'error'); return; }
+    if (!sel || !sel.value) { toast(t('toast.selectListFirst'), 'error'); return; }
 
     if (forceAlwaysActive) {
       // Clear schedule — set to always active
       try {
         await invoke('update_schedule', { listId: sel.value, slots: [], alwaysActive: true });
         await this.refreshBlockLists();
-      } catch (e) { toast('Failed: ' + e, 'error'); }
+      } catch (e) { toast(t('common.failed', { error: e }), 'error'); }
       return;
     }
 
@@ -770,7 +770,7 @@ var ui = {
     try {
       await invoke('update_schedule', { listId: sel.value, slots: slots, alwaysActive: false });
       await this.refreshBlockLists();
-    } catch (e) { toast('Failed to save schedule: ' + e, 'error'); }
+    } catch (e) { toast(t('toast.scheduleSaveFailed', { error: e }), 'error'); }
   },
 
   _statsRange: '1d',
@@ -1284,30 +1284,30 @@ var ui = {
   async addException() {
     var lid = document.getElementById('exception-list-select').value;
     var v = document.getElementById('exception-input').value.trim();
-    if (!lid) { toast('Select a list', 'error'); return; }
-    if (!v) { toast('Enter a domain', 'error'); return; }
+    if (!lid) { toast(t('toast.selectListFirst'), 'error'); return; }
+    if (!v) { toast(t('toast.enterDomain'), 'error'); return; }
     try {
       await invoke('add_exception', { listId: lid, domain: v, exceptionType: 'domain' });
       document.getElementById('exception-input').value = '';
-      toast('Exception added: ' + v, 'success');
+      toast(t('toast.exceptionAdded', { domain: v }), 'success');
       await this.refreshBlockLists();
       this.refreshExceptions();
-    } catch (e) { toast('Failed: ' + e, 'error'); }
+    } catch (e) { toast(t('common.failed', { error: e }), 'error'); }
   },
 
   async removeException(lid, eid) {
     try {
       await invoke('remove_exception', { listId: lid, exceptionId: eid });
-      toast('Exception removed', 'success');
+      toast(t('toast.removed'), 'success');
       await this.refreshBlockLists();
       this.refreshExceptions();
-    } catch (e) { toast('Failed: ' + e, 'error'); }
+    } catch (e) { toast(t('common.failed', { error: e }), 'error'); }
   },
 
   // ── Import ──────────────────────────────────────────────────
   async importFromText() {
     var lid = document.getElementById('website-list-select').value;
-    if (!lid) { toast('Select a list first', 'error'); return; }
+    if (!lid) { toast(t('toast.selectListFirst'), 'error'); return; }
 
     var input = document.createElement('input');
     input.type = 'file';
@@ -1323,31 +1323,31 @@ var ui = {
           var data = JSON.parse(text);
           if (Array.isArray(data)) domains = data;
           else if (data.domains) domains = data.domains;
-        } catch (err) { toast('Invalid JSON', 'error'); return; }
+        } catch (err) { toast(t('toast.invalidJson'), 'error'); return; }
       } else {
         domains = text.split(/[\r\n,;]+/).map(function(s) { return s.trim(); }).filter(function(s) { return s && !s.startsWith('#'); });
       }
 
-      if (domains.length === 0) { toast('No domains found in file', 'error'); return; }
+      if (domains.length === 0) { toast(t('toast.noDomainsFound'), 'error'); return; }
       try {
         var result = await invoke('bulk_import_websites', { listId: lid, domains: domains, ruleType: 'domain' });
-        toast('Imported ' + result.added + ' domains', 'success');
+        toast(t('toast.imported', { count: result.added, item: 'domains' }), 'success');
         await ui.refreshBlockLists();
         ui.refreshWebsites();
-      } catch (err) { toast('Import failed: ' + err, 'error'); }
+      } catch (err) { toast(t('toast.importFailed', { error: err }), 'error'); }
     };
     input.click();
   },
 
   async importPremadeList(category) {
     var lid = document.getElementById('website-list-select').value;
-    if (!lid) { toast('Select a list first', 'error'); return; }
+    if (!lid) { toast(t('toast.selectListFirst'), 'error'); return; }
 
     try {
       var resp = await fetch('premade-lists.json');
       var data = await resp.json();
       var cat = data.categories[category];
-      if (!cat) { toast('Category not found', 'error'); return; }
+      if (!cat) { toast(t('toast.importFailed', { error: 'Category not found' }), 'error'); return; }
 
       var totalAdded = 0;
 
@@ -1364,38 +1364,38 @@ var ui = {
       }
 
       if (totalAdded === 0) {
-        toast(cat.name + ' — all items already in list', 'info');
+        toast(t('toast.allItemsAlreadyInList', { name: cat.name }), 'info');
       } else {
-        toast('Imported ' + totalAdded + ' ' + cat.name + ' rules', 'success');
+        toast(t('toast.importedCategory', { count: totalAdded, name: cat.name }), 'success');
       }
       await this.refreshBlockLists();
       this.refreshWebsites();
-    } catch (e) { toast('Failed: ' + e, 'error'); }
+    } catch (e) { toast(t('common.failed', { error: e }), 'error'); }
   },
 
   async importEntireInternet() {
     var lid = document.getElementById('website-list-select').value;
-    if (!lid) { toast('Select a list first', 'error'); return; }
+    if (!lid) { toast(t('toast.selectListFirst'), 'error'); return; }
     var ok = await showConfirm(t('confirm.blockEntireInternet'), t('confirm.blockEntireInternetMsg'));
     if (!ok) return;
     try {
       await invoke('add_website_rule', { listId: lid, ruleType: 'entire_internet', value: '*' });
-      toast('Entire internet blocked', 'success');
+      toast(t('toast.entireInternetBlocked'), 'success');
       await this.refreshBlockLists();
       this.refreshWebsites();
-    } catch (e) { toast('Failed: ' + e, 'error'); }
+    } catch (e) { toast(t('common.failed', { error: e }), 'error'); }
   },
 
   importKeywordPrompt: function() {
     var lid = document.getElementById('website-list-select').value;
-    if (!lid) { toast('Select a list first', 'error'); return; }
+    if (!lid) { toast(t('toast.selectListFirst'), 'error'); return; }
 
-    document.getElementById('modal-title').textContent = 'Block URLs Containing';
+    document.getElementById('modal-title').textContent = t('modal.blockUrlsContaining');
     document.getElementById('modal-body').innerHTML =
-      '<label style="display:block;margin-bottom:4px;font-size:12px;color:var(--text-muted);">Keyword</label>' +
-      '<input type="text" id="modal-keyword-input" class="input" style="width:100%;" placeholder="e.g. game, gambling, etc.">' +
-      '<p style="font-size:12px;color:var(--text-muted);margin-top:8px;">Any URL containing this word will be blocked.</p>';
-    document.getElementById('modal-confirm').textContent = 'Block';
+      '<label style="display:block;margin-bottom:4px;font-size:12px;color:var(--text-muted);">' + t('common.keyword') + '</label>' +
+      '<input type="text" id="modal-keyword-input" class="input" style="width:100%;" placeholder="' + t('modal.keywordPlaceholder') + '">' +
+      '<p style="font-size:12px;color:var(--text-muted);margin-top:8px;">' + t('modal.keywordHint') + '</p>';
+    document.getElementById('modal-confirm').textContent = t('modal.block');
     document.getElementById('modal-confirm').setAttribute('data-action', 'confirm-keyword');
     document.getElementById('modal-confirm').setAttribute('data-list-id', lid);
     document.getElementById('modal-overlay').classList.remove('hidden');
@@ -1405,14 +1405,14 @@ var ui = {
   async confirmKeyword(lid) {
     var i = document.getElementById('modal-keyword-input');
     var kw = i ? i.value.trim() : '';
-    if (!kw) { toast('Enter a keyword', 'error'); return; }
+    if (!kw) { toast(t('toast.enterKeyword'), 'error'); return; }
     try {
       await invoke('add_website_rule', { listId: lid, ruleType: 'keyword', value: kw });
-      toast('Keyword blocked: ' + kw, 'success');
+      toast(t('toast.keywordBlocked', { kw: kw }), 'success');
       this.closeModal();
       await this.refreshBlockLists();
       this.refreshWebsites();
-    } catch (e) { toast('Failed: ' + e, 'error'); }
+    } catch (e) { toast(t('common.failed', { error: e }), 'error'); }
   },
 
   async clearAllWebsites() {
@@ -1420,10 +1420,10 @@ var ui = {
     if (!ok) return;
     try {
       var result = await invoke('clear_all_websites');
-      toast('Cleared ' + result.cleared + ' websites', 'success');
+      toast(t('toast.cleared', { count: result.cleared, item: 'websites' }), 'success');
       await this.refreshBlockLists();
       this.refreshWebsites();
-    } catch (e) { toast('Failed: ' + e, 'error'); }
+    } catch (e) { toast(t('common.failed', { error: e }), 'error'); }
   },
 
   async clearAllApps() {
@@ -1431,10 +1431,10 @@ var ui = {
     if (!ok) return;
     try {
       var result = await invoke('clear_all_apps');
-      toast('Cleared ' + result.cleared + ' apps', 'success');
+      toast(t('toast.cleared', { count: result.cleared, item: 'apps' }), 'success');
       await this.refreshBlockLists();
       this.refreshApps();
-    } catch (e) { toast('Failed: ' + e, 'error'); }
+    } catch (e) { toast(t('common.failed', { error: e }), 'error'); }
   },
 
   toggleImportDropdown: function() {
@@ -1463,9 +1463,9 @@ var ui = {
     try {
       var path = await invoke('export_configuration');
       if (!path) return; // user cancelled the dialog
-      toast('Exported to ' + path, 'success');
+      toast(t('toast.exportedTo', { path: path }), 'success');
     } catch (e) {
-      toast('Export failed: ' + e, 'error');
+      toast(t('toast.exportFailed', { error: e }), 'error');
     }
   },
 
@@ -1474,14 +1474,14 @@ var ui = {
     try {
       text = await invoke('pick_import_file');
     } catch (err) {
-      toast('Failed to open file: ' + err, 'error');
+      toast(t('toast.importFailed', { error: err }), 'error');
       return;
     }
     if (!text) return; // user cancelled
 
     // Validate JSON before showing warning
     try { JSON.parse(text); }
-    catch (err) { toast('Invalid JSON file', 'error'); return; }
+    catch (err) { toast(t('toast.invalidJson'), 'error'); return; }
 
     var ok = await showConfirm(
       t('confirm.importConfig'),
@@ -1491,11 +1491,11 @@ var ui = {
 
     try {
       var result = await invoke('import_configuration', { json: text });
-      toast('Imported ' + (result.imported || 0) + ' block lists', 'success');
+      toast(t('toast.importedLists', { count: (result.imported || 0) }), 'success');
       await this.refreshBlockLists();
       if (state.currentPage === 'dashboard') this.refreshDashboard();
     } catch (err) {
-      toast('Import failed: ' + err, 'error');
+      toast(t('toast.importFailed', { error: err }), 'error');
     }
   },
 
@@ -1507,11 +1507,11 @@ var ui = {
     if (!ok) return;
     try {
       await invoke('clear_statistics');
-      toast('Statistics cleared', 'success');
+      toast(t('toast.cleared', { count: 'statistics', item: '' }), 'success');
       if (state.currentPage === 'statistics') ui.refreshStatistics();
       if (state.currentPage === 'dashboard') ui.refreshDashboard();
     } catch (e) {
-      toast('Failed: ' + e, 'error');
+      toast(t('common.failed', { error: e }), 'error');
     }
   },
 
@@ -1520,24 +1520,24 @@ var ui = {
     if (!input) return;
     var days = parseInt(input.value, 10);
     if (!days || days < 1) {
-      toast('Enter a valid number of days (minimum 1)', 'error');
+      toast(t('toast.invalidRetention'), 'error');
       return;
     }
     if (days > 36500) {
-      toast('Maximum is 36500 days', 'error');
+      toast(t('toast.maxRetention'), 'error');
       return;
     }
     try {
       var deleted = await invoke('set_stats_retention', { days: days });
       if (deleted > 0) {
-        toast('Retention set to ' + days + ' days · ' + deleted + ' old entries cleaned', 'success');
+        toast(t('toast.retentionSetWithCleanup', { days: days, deleted: deleted }), 'success');
       } else {
-        toast('Retention set to ' + days + ' days', 'success');
+        toast(t('toast.retentionSet', { days: days }), 'success');
       }
       if (state.currentPage === 'statistics') ui.refreshStatistics();
       if (state.currentPage === 'dashboard') ui.refreshDashboard();
     } catch (e) {
-      toast('Failed: ' + e, 'error');
+      toast(t('common.failed', { error: e }), 'error');
     }
   },
 
@@ -1549,9 +1549,9 @@ var ui = {
     if (!ok) return;
     try {
       await invoke('reset_settings');
-      toast('Settings reset to defaults', 'success');
+      toast(t('toast.settingsReset'), 'success');
     } catch (e) {
-      toast('Failed: ' + e, 'error');
+      toast(t('common.failed', { error: e }), 'error');
     }
   },
 
@@ -1569,11 +1569,11 @@ var ui = {
     if (!ok2) return;
     try {
       await invoke('delete_all_data');
-      toast('All data deleted', 'success');
+      toast(t('toast.allDataDeleted'), 'success');
       await ui.refreshBlockLists();
       ui.navigateTo('dashboard');
     } catch (e) {
-      toast('Failed: ' + e, 'error');
+      toast(t('common.failed', { error: e }), 'error');
     }
   },
 
@@ -1715,7 +1715,7 @@ var ui = {
     var lists = [];
     try { lists = await invoke('list_block_lists'); } catch (e) {}
     if (!lists || lists.length === 0) {
-      toast('Create a block list first', 'warning');
+      toast(t('toast.createBlockListFirst'), 'warning');
       return;
     }
 
@@ -1949,10 +1949,10 @@ var ui = {
           cyclesUntilLongBreak: config.cycles,
         });
         overlay.remove();
-        toast('Focus session started', 'success');
+        toast(t('toast.focusSessionStarted'), 'success');
         ui._renderPomodoroWidget();
       } catch (e) {
-        toast('Failed to start: ' + e, 'error');
+        toast(t('toast.startFailed', { error: e }), 'error');
       }
     });
   },
@@ -2018,26 +2018,26 @@ var ui = {
 
   pomodoroPause: async function() {
     try { await invoke('pomodoro_pause'); ui._renderPomodoroWidget(); }
-    catch (e) { toast('Pause failed: ' + e, 'error'); }
+    catch (e) { toast(t('toast.pauseFailed', { error: e }), 'error'); }
   },
 
   pomodoroResume: async function() {
     try { await invoke('pomodoro_resume'); ui._renderPomodoroWidget(); }
-    catch (e) { toast('Resume failed: ' + e, 'error'); }
+    catch (e) { toast(t('toast.resumeFailed', { error: e }), 'error'); }
   },
 
   pomodoroSkip: async function() {
     try { await invoke('pomodoro_skip'); ui._renderPomodoroWidget(); }
-    catch (e) { toast('Skip failed: ' + e, 'error'); }
+    catch (e) { toast(t('toast.skipFailed', { error: e }), 'error'); }
   },
 
   pomodoroStop: async function() {
     if (!confirm(t('confirm.endFocusSession'))) return;
     try {
       await invoke('pomodoro_stop');
-      toast('Focus session ended', 'success');
+      toast(t('toast.focusSessionEnded'), 'success');
       ui._renderPomodoroWidget();
-    } catch (e) { toast('Stop failed: ' + e, 'error'); }
+    } catch (e) { toast(t('toast.stopFailed', { error: e }), 'error'); }
   },
 
   _renderAllowanceDashboard: async function() {
@@ -2108,8 +2108,8 @@ var ui = {
     var value = (document.getElementById('allowance-value-input').value || '').trim();
     var minutes = parseInt(document.getElementById('allowance-minutes-input').value || '30', 10);
     var strict = document.getElementById('allowance-strict-input').checked;
-    if (!value) { toast('Enter a domain or app', 'warning'); return; }
-    if (!minutes || minutes < 1) { toast('Enter minutes > 0', 'warning'); return; }
+    if (!value) { toast(t('toast.enterDomain'), 'warning'); return; }
+    if (!minutes || minutes < 1) { toast(t('toast.enterMinutes'), 'warning'); return; }
     try {
       await invoke('allowance_create', {
         kind: kind, value: value,
@@ -2118,11 +2118,11 @@ var ui = {
       });
       document.getElementById('allowance-value-input').value = '';
       document.getElementById('allowance-minutes-input').value = '30';
-      toast('Allowance added', 'success');
+      toast(t('toast.allowanceAdded'), 'success');
       ui.refreshAllowancesTab();
       ui._renderAllowanceDashboard();
     } catch (e) {
-      toast('Failed: ' + e, 'error');
+      toast(t('common.failed', { error: e }), 'error');
     }
   },
 
@@ -2130,19 +2130,19 @@ var ui = {
     if (!confirm(t('confirm.deleteAllowance'))) return;
     try {
       await invoke('allowance_delete', { id: id });
-      toast('Deleted', 'success');
+      toast(t('toast.deleted'), 'success');
       ui.refreshAllowancesTab();
       ui._renderAllowanceDashboard();
-    } catch (e) { toast('Failed: ' + e, 'error'); }
+    } catch (e) { toast(t('common.failed', { error: e }), 'error'); }
   },
 
   resetAllowance: async function(id) {
     try {
       await invoke('allowance_reset_today', { id: id });
-      toast('Today reset', 'success');
+      toast(t('allowance.todayReset'), 'success');
       ui.refreshAllowancesTab();
       ui._renderAllowanceDashboard();
-    } catch (e) { toast('Failed: ' + e, 'error'); }
+    } catch (e) { toast(t('common.failed', { error: e }), 'error'); }
   },
 
   startAllowanceNotificationPolling: function() {
@@ -2309,7 +2309,7 @@ document.addEventListener('click', function(e) {
   if (el.classList && el.classList.contains('rule-value')) {
     var text = el.textContent.trim();
     navigator.clipboard.writeText(text).then(function() {
-      toast('Copied to clipboard', 'success');
+      toast(t('toast.copiedToClipboard'), 'success');
     });
     return;
   }
@@ -2505,7 +2505,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         // The page needs a full re-render since all text changed
         if (state.currentPage) ui.navigateTo(state.currentPage);
       } else {
-        toast('Failed to switch language', 'error');
+        toast(t('toast.importFailed', { error: 'Failed to switch language' }), 'error');
         this.value = i18n.locale;
       }
     });
@@ -2535,21 +2535,21 @@ document.addEventListener('DOMContentLoaded', async function() {
   var modeAlwaysBtn = document.getElementById('mode-always');
   if (modeAlwaysBtn) modeAlwaysBtn.addEventListener('click', async function() {
     var sel = document.getElementById('schedule-list-select');
-    if (!sel || !sel.value) { toast('Select a block list first', 'error'); return; }
+    if (!sel || !sel.value) { toast(t('toast.selectListFirst'), 'error'); return; }
     document.querySelectorAll('.schedule-cell.active').forEach(function(c) { c.classList.remove('active'); });
     ui._scheduleManualMode = false;
     await ui._saveSchedule(true);
-    toast('Set to Always Active', 'success');
+    toast(t('toast.setToAlwaysActive'), 'success');
     ui.refreshSchedule();
   });
 
   var modeScheduledBtn = document.getElementById('mode-scheduled');
   if (modeScheduledBtn) modeScheduledBtn.addEventListener('click', async function() {
     var sel = document.getElementById('schedule-list-select');
-    if (!sel || !sel.value) { toast('Select a block list first', 'error'); return; }
+    if (!sel || !sel.value) { toast(t('toast.selectListFirst'), 'error'); return; }
     ui._scheduleManualMode = true;
     await ui._saveSchedule(false);
-    toast('Switched to scheduled mode — click hours to set blocking', 'info');
+    toast(t('toast.switchedToScheduled'), 'info');
     ui.refreshSchedule();
   });
 
@@ -2558,7 +2558,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   if (bcs) bcs.addEventListener('click', async function() {
     document.querySelectorAll('.schedule-cell.active').forEach(function(c) { c.classList.remove('active'); });
     await ui._saveSchedule();
-    toast('Schedule cleared', 'success');
+    toast(t('toast.scheduleCleared'), 'success');
     ui.refreshSchedule();
   });
 
@@ -2566,10 +2566,10 @@ document.addEventListener('DOMContentLoaded', async function() {
   document.querySelectorAll('.schedule-preset-btn[data-preset]').forEach(function(btn) {
     btn.addEventListener('click', async function() {
       var sel = document.getElementById('schedule-list-select');
-      if (!sel || !sel.value) { toast('Select a block list first', 'error'); return; }
+      if (!sel || !sel.value) { toast(t('toast.selectListFirst'), 'error'); return; }
       var preset = btn.getAttribute('data-preset');
       await ui._applySchedulePreset(preset);
-      toast('Applied preset', 'success');
+      toast(t('toast.presetApplied'), 'success');
       ui.refreshSchedule();
     });
   });
@@ -2612,12 +2612,12 @@ document.addEventListener('DOMContentLoaded', async function() {
       try {
         if (this.checked) {
           await window.__TAURI__.core.invoke('plugin:autostart|enable');
-          toast('Auto-start enabled', 'success');
+          toast(t('toast.autoStartEnabled'), 'success');
         } else {
           await window.__TAURI__.core.invoke('plugin:autostart|disable');
-          toast('Auto-start disabled', 'success');
+          toast(t('toast.autoStartDisabled'), 'success');
         }
-      } catch (e) { toast('Failed: ' + e, 'error'); }
+      } catch (e) { toast(t('common.failed', { error: e }), 'error'); }
     });
   }
 
@@ -2677,7 +2677,7 @@ function enhanceSelect(selectEl) {
       if (!selected.value) labelEl.classList.add('dd-placeholder');
       else labelEl.classList.remove('dd-placeholder');
     } else {
-      labelEl.textContent = 'Select...';
+      labelEl.textContent = t('common.selectList');
       labelEl.classList.add('dd-placeholder');
     }
   }
