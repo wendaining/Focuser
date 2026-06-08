@@ -2500,12 +2500,10 @@ document.addEventListener('DOMContentLoaded', async function() {
       if (newLocale === i18n.locale) return;
       var ok = await i18n.setLocale(newLocale);
       if (ok) {
-        // Update active button state
+        // Update active button state (setLocale already called navigateTo)
         document.querySelectorAll('.lang-btn').forEach(function(b) {
           b.classList.toggle('active', b.getAttribute('data-lang') === newLocale);
         });
-        // Re-render current page
-        if (state.currentPage) ui.navigateTo(state.currentPage);
       } else {
         toast(t('common.failed', { error: 'Failed to switch language' }), 'error');
       }

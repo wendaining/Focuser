@@ -38,11 +38,17 @@ var i18n = {
       // Update HTML lang attribute
       document.documentElement.lang = locale;
 
-      // Re-render the entire UI
-      i18n._applyToDOM();
+      // Re-render the entire UI.
+      // IMPORTANT: navigateTo first (generates new DOM), then apply
+      // translations. If applyToDOM runs before navigateTo, the
+      // freshly generated HTML will keep its English fallback text.
       if (typeof ui !== 'undefined' && ui.navigateTo) {
         ui.navigateTo(state.currentPage || 'dashboard');
       }
+      // Use requestAnimationFrame to ensure DOM is painted before translate
+      window.requestAnimationFrame(function() {
+        i18n._applyToDOM();
+      });
 
       return true;
     } catch (e) {
