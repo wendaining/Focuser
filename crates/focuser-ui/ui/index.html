@@ -60,8 +60,8 @@
         <div class="dashboard-panels">
           <div class="panel focus-panel" id="pomodoro-panel">
             <div class="panel-header">
-              <h3><i data-lucide="timer"></i> Focus Session</h3>
-              <span class="panel-header-hint" id="pomodoro-header-hint">Pomodoro</span>
+              <h3><i data-lucide="timer"></i> <span data-i18n="dashboard.focusSession">Focus Session</span></h3>
+              <span class="panel-header-hint" id="pomodoro-header-hint" data-i18n="dashboard.pomodoro">Pomodoro</span>
             </div>
             <div class="panel-body" id="pomodoro-body">
               <div class="pomodoro-idle">
@@ -75,7 +75,7 @@
 
           <div class="panel focus-panel" id="allowance-panel">
             <div class="panel-header">
-              <h3><i data-lucide="hourglass"></i> Today's Allowances</h3>
+              <h3><i data-lucide="hourglass"></i> <span data-i18n="dashboard.todaysAllowances">Today's Allowances</span></h3>
               <button class="btn btn-sm btn-ghost" data-page="websites" data-target-tab="websites-tab-allowances" style="font-size:11px;padding:5px 12px;">
                 Manage <i data-lucide="arrow-right" style="width:12px;height:12px;"></i>
               </button>
@@ -168,24 +168,24 @@
       <!-- Block Lists -->
       <section id="page-blocklists" class="page">
         <header class="page-header">
-          <h1>Block Lists</h1>
-          <p class="page-subtitle">Manage your blocking profiles</p>
-          <button class="btn btn-primary" id="btn-new-blocklist"><i data-lucide="plus"></i> New list</button>
+          <h1 data-i18n="blocklists.title">Block Lists</h1>
+          <p class="page-subtitle" data-i18n="blocklists.subtitle">Manage your blocking profiles</p>
+          <button class="btn btn-primary" id="btn-new-blocklist"><i data-lucide="plus"></i> <span data-i18n="blocklists.newList">New list</span></button>
         </header>
-        <div id="blocklists-container" class="card-grid"><div class="empty-state">No block lists yet</div></div>
+        <div id="blocklists-container" class="card-grid"><div class="empty-state" data-i18n="blocklists.noLists">No block lists yet</div></div>
       </section>
 
       <!-- Websites -->
       <section id="page-websites" class="page page-fixed">
         <header class="page-header">
-          <h1>Websites</h1>
-          <p class="page-subtitle">Manage blocked websites, keywords, and exceptions</p>
+          <h1 data-i18n="websites.title">Websites</h1>
+          <p class="page-subtitle" data-i18n="websites.subtitle">Manage blocked websites, keywords, and exceptions</p>
         </header>
 
         <div class="tabs" style="margin-bottom:14px;">
-          <button class="tab active" data-action="switch-tab" data-tab="websites-tab-block"><i data-lucide="globe"></i> Websites</button>
-          <button class="tab" data-action="switch-tab" data-tab="websites-tab-exceptions"><i data-lucide="shield-off"></i> Exceptions</button>
-          <button class="tab" data-action="switch-tab" data-tab="websites-tab-allowances"><i data-lucide="hourglass"></i> Allowances</button>
+          <button class="tab active" data-action="switch-tab" data-tab="websites-tab-block"><i data-lucide="globe"></i> <span data-i18n="websites.tabBlock">Websites</span></button>
+          <button class="tab" data-action="switch-tab" data-tab="websites-tab-exceptions"><i data-lucide="shield-off"></i> <span data-i18n="websites.tabExceptions">Exceptions</span></button>
+          <button class="tab" data-action="switch-tab" data-tab="websites-tab-allowances"><i data-lucide="hourglass"></i> <span data-i18n="websites.tabAllowances">Allowances</span></button>
         </div>
 
         <!-- Websites Tab -->
@@ -283,8 +283,8 @@
       <!-- Applications -->
       <section id="page-apps" class="page page-fixed">
         <header class="page-header">
-          <h1>Applications</h1>
-          <p class="page-subtitle">Manage blocked applications and executables</p>
+          <h1 data-i18n="apps.title">Applications</h1>
+          <p class="page-subtitle" data-i18n="apps.subtitle">Manage blocked applications and executables</p>
         </header>
         <div class="panel overflow-visible" style="margin-bottom:14px;">
           <div class="panel-header"><h3><i data-lucide="plus-circle"></i> Add Application</h3></div>
@@ -316,8 +316,8 @@
       <!-- Schedule -->
       <section id="page-schedule" class="page">
         <header class="page-header">
-          <h1>Schedule</h1>
-          <p class="page-subtitle">Set when your block lists are active. Changes save automatically.</p>
+          <h1 data-i18n="schedule.title">Schedule</h1>
+          <p class="page-subtitle" data-i18n="schedule.subtitle">Set when your block lists are active. Changes save automatically.</p>
         </header>
 
         <!-- Top controls: list selector + mode toggle -->
@@ -414,8 +414,8 @@
       <!-- Statistics -->
       <section id="page-statistics" class="page page-fixed">
         <header class="page-header" style="flex-shrink:0;">
-          <h1>Statistics</h1>
-          <p class="page-subtitle">Your blocking activity</p>
+          <h1 data-i18n="statistics.title">Statistics</h1>
+          <p class="page-subtitle" data-i18n="statistics.subtitle">Your blocking activity</p>
         </header>
         <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;flex-shrink:0;">
           <button class="btn btn-sm stats-range-btn" data-range="5m">5m</button>
