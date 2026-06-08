@@ -225,7 +225,7 @@ var ui = {
 
   renderBlockLists: function() {
     var c = document.getElementById('blocklists-container');
-    if (state.blockLists.length === 0) { c.innerHTML = '<div class="empty-state">No block lists yet</div>'; return; }
+    if (state.blockLists.length === 0) { c.innerHTML = '<div class="empty-state">' + t('blocklists.noLists') + '</div>'; return; }
 
     // Deterministic color palette — each list gets a consistent color based on its name.
     var palette = [
@@ -251,8 +251,8 @@ var ui = {
       var initial = (l.name || '?').trim().charAt(0).toUpperCase() || '?';
 
       var statusPill = alwaysActive
-        ? '<span class="status-pill status-active">' + ico('check-circle', 12) + ' Always Active</span>'
-        : '<span class="status-pill status-scheduled">' + ico('clock', 12) + ' Scheduled</span>';
+        ? '<span class="status-pill status-active">' + ico('check-circle', 12) + ' ' + t('status.alwaysActive') + '</span>'
+        : '<span class="status-pill status-scheduled">' + ico('clock', 12) + ' ' + t('status.scheduled') + '</span>';
 
       var prot = l.protection;
       var isProtected = prot && new Date(prot.expires_at) > new Date();
@@ -262,12 +262,12 @@ var ui = {
         var h = Math.floor(remaining / 3600);
         var m = Math.floor((remaining % 3600) / 60);
         var timeStr = h > 0 ? h + 'h ' + m + 'm' : m + 'm';
-        protBadge = '<span class="locked-badge">' + ico('lock', 11) + ' LOCKED · ' + timeStr + '</span>';
+        protBadge = '<span class="locked-badge">' + ico('lock', 11) + ' ' + t('blocklists.lockedBadge', { time: timeStr }) + '</span>';
       }
 
       var protBtn = isProtected
-        ? '<button class="btn btn-sm btn-ghost" disabled>' + ico('lock', 13) + ' Focus Locked</button>'
-        : '<button class="btn btn-sm btn-lock" data-action="focus-lock" data-list-id="' + l.id + '" data-list-name="' + esc(l.name) + '">' + ico('shield-alert', 13) + ' Focus Lock</button>';
+        ? '<button class="btn btn-sm btn-ghost" disabled>' + ico('lock', 13) + ' ' + t('status.focusLocked') + '</button>'
+        : '<button class="btn btn-sm btn-lock" data-action="focus-lock" data-list-id="' + l.id + '" data-list-name="' + esc(l.name) + '">' + ico('shield-alert', 13) + ' ' + t('modal.focusLock') + '</button>';
 
       var avatarStyle = 'background:' + color.bg + ';box-shadow: 0 4px 16px ' + color.shadow + ', inset 0 1px 0 rgba(255,255,255,0.2);';
       var enabledClass = l.enabled ? ' is-enabled' : ' is-disabled';
@@ -287,22 +287,22 @@ var ui = {
         '<div class="blocklist-stats">' +
           '<div class="stat-chip">' +
             '<div class="stat-chip-icon">' + ico('globe', 15) + '</div>' +
-            '<div class="stat-chip-text"><span class="stat-chip-value">' + l.websites.length + '</span><span class="stat-chip-label">Sites</span></div>' +
+            '<div class="stat-chip-text"><span class="stat-chip-value">' + l.websites.length + '</span><span class="stat-chip-label">' + t('common.sites') + '</span></div>' +
           '</div>' +
           '<div class="stat-chip">' +
             '<div class="stat-chip-icon">' + ico('monitor', 15) + '</div>' +
-            '<div class="stat-chip-text"><span class="stat-chip-value">' + l.applications.length + '</span><span class="stat-chip-label">Apps</span></div>' +
+            '<div class="stat-chip-text"><span class="stat-chip-value">' + l.applications.length + '</span><span class="stat-chip-label">' + t('common.apps') + '</span></div>' +
           '</div>' +
           '<div class="stat-chip">' +
             '<div class="stat-chip-icon">' + ico('shield-off', 15) + '</div>' +
-            '<div class="stat-chip-text"><span class="stat-chip-value">' + l.exceptions.length + '</span><span class="stat-chip-label">Exceptions</span></div>' +
+            '<div class="stat-chip-text"><span class="stat-chip-value">' + l.exceptions.length + '</span><span class="stat-chip-label">' + t('common.exceptions') + '</span></div>' +
           '</div>' +
         '</div>' +
         '<div class="blocklist-card-actions">' +
-          '<button class="btn btn-sm btn-ghost" data-action="edit-list" data-list-id="' + l.id + '">' + ico('pencil', 13) + ' Edit</button>' +
+          '<button class="btn btn-sm btn-ghost" data-action="edit-list" data-list-id="' + l.id + '">' + ico('pencil', 13) + ' ' + t('common.edit') + '</button>' +
           protBtn +
-          '<button class="btn btn-sm btn-ghost" data-action="edit-schedule" data-list-id="' + l.id + '">' + ico('calendar-clock', 13) + ' Schedule</button>' +
-          (isProtected ? '' : '<button class="btn btn-sm btn-ghost btn-danger-ghost" data-action="delete-list" data-list-id="' + l.id + '" data-list-name="' + esc(l.name) + '">' + ico('trash-2', 13) + ' Delete</button>') +
+          '<button class="btn btn-sm btn-ghost" data-action="edit-schedule" data-list-id="' + l.id + '">' + ico('calendar-clock', 13) + ' ' + t('nav.schedule') + '</button>' +
+          (isProtected ? '' : '<button class="btn btn-sm btn-ghost btn-danger-ghost" data-action="delete-list" data-list-id="' + l.id + '" data-list-name="' + esc(l.name) + '">' + ico('trash-2', 13) + ' ' + t('common.delete') + '</button>') +
         '</div>' +
       '</div>';
     }).join('');
@@ -443,7 +443,7 @@ var ui = {
     if (!selectedList) {
       schedBar.style.display = 'none';
       var c = document.getElementById('websites-list');
-      c.innerHTML = '<div class="empty-state">Select a block list to view its websites</div>';
+      c.innerHTML = '<div class="empty-state">' + t('websites.selectListToView') + '</div>';
       return;
     }
 
@@ -473,7 +473,7 @@ var ui = {
       });
     }
     if (all.length === 0) {
-      c.innerHTML = '<div class="empty-state">' + (query ? 'No matches for "' + esc(query) + '"' : 'No websites blocked') + '</div>';
+      c.innerHTML = '<div class="empty-state">' + (query ? t('common.noMatch', { query: query }) : t('websites.noWebsitesBlocked')) + '</div>';
       return;
     }
     c.innerHTML = all.map(function(r) {
@@ -511,7 +511,7 @@ var ui = {
     if (searchEl) searchEl.value = '';
     if (!selectedList) {
       var c = document.getElementById('apps-list');
-      c.innerHTML = '<div class="empty-state">Select a block list to view its applications</div>';
+      c.innerHTML = '<div class="empty-state">' + t('apps.selectListToViewApps') + '</div>';
       return;
     }
     this.renderFilteredApps('');
@@ -529,7 +529,7 @@ var ui = {
       });
     }
     if (all.length === 0) {
-      c.innerHTML = '<div class="empty-state">' + (query ? 'No matches for "' + esc(query) + '"' : 'No applications blocked') + '</div>';
+      c.innerHTML = '<div class="empty-state">' + (query ? t('common.noMatch', { query: query }) : t('apps.noAppsBlocked')) + '</div>';
       return;
     }
     c.innerHTML = all.map(function(r) {
@@ -1606,10 +1606,10 @@ var ui = {
       ui._pomodoroStatus = status;
       if (!status) {
         body.innerHTML = '<div class="pomodoro-idle">' +
-          '<p class="pomodoro-idle-text">Start a focus session to block distractions in work/break cycles.</p>' +
-          '<button class="btn btn-primary" id="btn-start-pomodoro"><i data-lucide="play"></i> Start Focus Session</button>' +
+          '<p class="pomodoro-idle-text">' + t('dashboard.startFocusDesc') + '</p>' +
+          '<button class="btn btn-primary" id="btn-start-pomodoro"><i data-lucide="play"></i> ' + t('dashboard.startFocusSession') + '</button>' +
           '</div>';
-        if (hint) hint.textContent = 'Pomodoro';
+        if (hint) hint.textContent = t('status.pomodoro');
         var b = document.getElementById('btn-start-pomodoro');
         if (b) b.addEventListener('click', function() { ui.openPomodoroStartModal(); });
         refreshIcons();
@@ -1618,7 +1618,7 @@ var ui = {
 
       var phase = status.current_phase; // "work" | "short_break" | "long_break"
       var isWork = phase === 'work';
-      var phaseLabel = isWork ? 'Work' : (phase === 'long_break' ? 'Long Break' : 'Short Break');
+      var phaseLabel = isWork ? t('pomodoro.work') : (phase === 'long_break' ? t('pomodoro.longBreak') : t('pomodoro.shortBreak'));
       var remaining = status.remaining_secs;
       var totalDur = status.phase_duration_secs || 1;
       var pct = 1 - (remaining / totalDur);
@@ -1630,7 +1630,7 @@ var ui = {
       var dashOffset = circumference * (1 - pct);
 
       var ringClass = isWork ? 'phase-work' : 'phase-break';
-      var cycleText = 'Cycle ' + status.current_cycle + ' · ' + status.completed_cycles + ' done';
+      var cycleText = t('pomodoro.cycle', { current: status.current_cycle, completed: status.completed_cycles });
 
       body.innerHTML =
         '<div class="pomodoro-active">' +
@@ -1642,23 +1642,23 @@ var ui = {
             '</svg>' +
             '<div class="pomodoro-ring-center">' +
               '<div class="pomodoro-time">' + ui._fmtTime(remaining) + '</div>' +
-              '<div class="pomodoro-cycle-badge">' + (status.paused ? 'Paused' : phaseLabel) + '</div>' +
+              '<div class="pomodoro-cycle-badge">' + (status.paused ? t('status.paused') : phaseLabel) + '</div>' +
             '</div>' +
           '</div>' +
           '<div class="pomodoro-info">' +
-            '<h4 class="pomodoro-phase-label">' + phaseLabel + (status.paused ? ' (paused)' : '') + '</h4>' +
+            '<h4 class="pomodoro-phase-label">' + phaseLabel + (status.paused ? t('pomodoro.pausedSuffix') : '') + '</h4>' +
             '<div class="pomodoro-meta">' + escapeHtml(status.block_list_name) + '</div>' +
             '<div class="pomodoro-meta">' + cycleText + '</div>' +
             '<div class="pomodoro-controls">' +
               (status.paused
-                ? '<button class="btn btn-primary" id="btn-pom-resume"><i data-lucide="play"></i> Resume</button>'
-                : '<button class="btn btn-secondary" id="btn-pom-pause"><i data-lucide="pause"></i> Pause</button>') +
-              '<button class="btn btn-secondary" id="btn-pom-skip"><i data-lucide="skip-forward"></i> Skip</button>' +
-              '<button class="btn btn-danger" id="btn-pom-stop"><i data-lucide="square"></i> Stop</button>' +
+                ? '<button class="btn btn-primary" id="btn-pom-resume"><i data-lucide="play"></i> ' + t('pomodoro.resume') + '</button>'
+                : '<button class="btn btn-secondary" id="btn-pom-pause"><i data-lucide="pause"></i> ' + t('pomodoro.pause') + '</button>') +
+              '<button class="btn btn-secondary" id="btn-pom-skip"><i data-lucide="skip-forward"></i> ' + t('pomodoro.skip') + '</button>' +
+              '<button class="btn btn-danger" id="btn-pom-stop"><i data-lucide="square"></i> ' + t('pomodoro.stop') + '</button>' +
             '</div>' +
           '</div>' +
         '</div>';
-      if (hint) hint.textContent = isWork ? 'Focus mode' : 'Break time';
+      if (hint) hint.textContent = isWork ? t('status.focusMode') : t('status.breakTime');
 
       var bp = document.getElementById('btn-pom-pause');
       if (bp) bp.addEventListener('click', function() { ui.pomodoroPause(); });
@@ -1670,7 +1670,7 @@ var ui = {
       if (bq) bq.addEventListener('click', function() { ui.pomodoroStop(); });
       refreshIcons();
     } catch (e) {
-      body.innerHTML = '<div class="empty-state">Focus session unavailable</div>';
+      body.innerHTML = '<div class="empty-state">' + t('dashboard.focusSessionUnavailable') + '</div>';
     }
   },
 
@@ -1692,12 +1692,12 @@ var ui = {
         events.forEach(function(ev) {
           if (ev.kind === 'phase_advanced') {
             if (!ui._pomodoroNotifEnabled) return;
-            var label = ev.to === 'work' ? 'Work session started — blocks on' :
-                        ev.to === 'long_break' ? 'Long break — 15 min off' :
-                        'Break time — 5 min off';
+            var label = ev.to === 'work' ? t('pomodoro.workStarted') :
+                        ev.to === 'long_break' ? t('pomodoro.longBreakStarted') :
+                        t('pomodoro.breakStarted');
             toast(label, 'success');
           } else if (ev.kind === 'tamper_detected') {
-            toast('Pomodoro aborted: system clock changed', 'error');
+            toast(t('pomodoro.tamperDetected'), 'error');
           }
         });
         ui._renderPomodoroWidget();
