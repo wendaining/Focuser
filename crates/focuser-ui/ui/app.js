@@ -26,7 +26,7 @@ document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
 // ─── UI ─────────────────────────────────────────────────────────────
 
 var ui = {
-  navigateTo: function(page) {
+  navigateTo: async function(page) {
     state.currentPage = page;
     document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
     document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
@@ -34,13 +34,19 @@ var ui = {
     var navEl = document.querySelector('[data-page="' + page + '"]');
     if (pageEl) pageEl.classList.add('active');
     if (navEl) navEl.classList.add('active');
+    var refreshPromise = null;
     switch (page) {
-      case 'dashboard': this.refreshDashboard(); break;
-      case 'blocklists': this.refreshBlockLists(); break;
-      case 'websites': this.refreshWebsites(); break;
-      case 'apps': this.refreshApps(); break;
-      case 'schedule': this.refreshSchedule(); break;
-      case 'statistics': this.refreshStatistics(); break;
+      case 'dashboard': refreshPromise = this.refreshDashboard(); break;
+      case 'blocklists': refreshPromise = this.refreshBlockLists(); break;
+      case 'websites': refreshPromise = this.refreshWebsites(); break;
+      case 'apps': refreshPromise = this.refreshApps(); break;
+      case 'schedule': refreshPromise = this.refreshSchedule(); break;
+      case 'statistics': refreshPromise = this.refreshStatistics(); break;
+    }
+    try {
+      if (refreshPromise) await refreshPromise;
+    } catch (e) {
+      console.error('Failed to refresh page ' + page + ':', e);
     }
     refreshIcons();
   },
@@ -2727,6 +2733,7 @@ function enhanceSelect(selectEl) {
 
   wrap.__ddClose = closeMenu;
   wrap.__ddSync = syncTrigger;
+  wrap.__ddRebuild = rebuildMenu;
 
   trigger.addEventListener('click', function(e) {
     e.stopPropagation();
@@ -2772,6 +2779,13 @@ function enhanceAllSelects() {
 function closeAllCustomDropdowns() {
   document.querySelectorAll('.dd-wrap.open').forEach(function(w) {
     if (w.__ddClose) w.__ddClose();
+  });
+}
+
+function syncCustomDropdowns() {
+  document.querySelectorAll('.dd-wrap').forEach(function(w) {
+    if (w.__ddSync) w.__ddSync();
+    if (w.classList.contains('open') && w.__ddRebuild) w.__ddRebuild();
   });
 }
 

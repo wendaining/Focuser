@@ -43,12 +43,9 @@ var i18n = {
       // translations. If applyToDOM runs before navigateTo, the
       // freshly generated HTML will keep its English fallback text.
       if (typeof ui !== 'undefined' && ui.navigateTo) {
-        ui.navigateTo(state.currentPage || 'dashboard');
+        await ui.navigateTo(state.currentPage || 'dashboard');
       }
-      // Use requestAnimationFrame to ensure DOM is painted before translate
-      window.requestAnimationFrame(function() {
-        i18n._applyToDOM();
-      });
+      i18n._applyToDOM();
 
       return true;
     } catch (e) {
@@ -128,6 +125,7 @@ var i18n = {
     });
 
     // Refresh Lucide icons if available
+    if (typeof syncCustomDropdowns === 'function') syncCustomDropdowns();
     if (typeof refreshIcons === 'function') refreshIcons();
   },
 
