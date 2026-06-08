@@ -136,18 +136,10 @@ var i18n = {
     try {
       locale = await invoke('get_setting', { key: 'ui_language', default: '' });
     } catch (e) {
-      // 2. Try localStorage fallback
-      try { locale = localStorage.getItem('focuser-locale'); } catch (_) {}
-    }
-
-    // 3. Detect from browser
+      // 2. Default to English for all new users.
+    //    Users can switch language in Settings.
     if (!locale) {
-      var nav = navigator.language || '';
-      if (nav.startsWith('zh')) {
-        locale = 'zh';
-      } else {
-        locale = 'en';
-      }
+      locale = 'en';
     }
 
     // Normalize to supported locales
