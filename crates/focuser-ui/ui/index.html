@@ -482,6 +482,13 @@
               <div class="setting-info"><span class="setting-name">Show notifications</span><span class="setting-desc">Display a notification when a site or app is blocked</span></div>
               <label class="toggle"><input type="checkbox" id="setting-notifications" checked><span class="toggle-slider"></span></label>
             </div>
+            <div class="setting-row">
+              <div class="setting-info"><span class="setting-name">Language</span><span class="setting-desc">Interface display language</span></div>
+              <select id="setting-language" class="input" style="max-width:160px;">
+                <option value="en">English</option>
+                <option value="zh">中文</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -591,6 +598,7 @@
   </div>
 
   <div id="toast-container"></div>
+  <script src="i18n.js"></script>
   <script src="charts.js"></script>
   <script src="app.js"></script>
 </body>

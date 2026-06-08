@@ -71,7 +71,7 @@ var ui = {
       var data = await invoke('get_browser_status');
       var browsers = (data && data.browsers) || [];
       if (browsers.length === 0) {
-        container.innerHTML = '<div class="empty-state">No browsers detected</div>';
+        container.innerHTML = '<div class="empty-state">' + t('status.noBrowsersDetected') + '</div>';
         return;
       }
 
@@ -90,15 +90,15 @@ var ui = {
         var statusClass, statusText, statusIcon;
         if (!b.running) {
           statusClass = 'browser-status-off';
-          statusText = 'Not running';
+          statusText = t('status.notRunning');
           statusIcon = 'circle';
         } else if (b.extension_connected) {
           statusClass = 'browser-status-protected';
-          statusText = 'Extension active';
+          statusText = t('status.extensionActive');
           statusIcon = 'shield-check';
         } else {
           statusClass = 'browser-status-warning';
-          statusText = 'No extension';
+          statusText = t('status.noExtension');
           statusIcon = 'shield-alert';
         }
 
@@ -112,7 +112,7 @@ var ui = {
           '</div>';
       }).join('');
     } catch (e) {
-      container.innerHTML = '<div class="empty-state">Could not query browser status</div>';
+      container.innerHTML = '<div class="empty-state">' + t('status.couldNotQueryBrowsers') + '</div>';
     }
   },
 
@@ -122,10 +122,10 @@ var ui = {
       container.innerHTML =
         '<div class="dashboard-empty">' +
           '<div class="dashboard-empty-icon">' + ico('shield-off', 24) + '</div>' +
-          '<div class="dashboard-empty-title">No active block lists</div>' +
-          '<div class="dashboard-empty-sub">Enable a block list to start focusing</div>' +
+          '<div class="dashboard-empty-title">' + t('dashboard.noActiveBlocks') + '</div>' +
+          '<div class="dashboard-empty-sub">' + t('dashboard.noActiveBlocksDesc') + '</div>' +
           '<button class="btn btn-primary btn-sm" data-page="blocklists" style="margin-top:14px;">' +
-            ico('plus', 13) + ' Create a block list' +
+            ico('plus', 13) + ' ' + t('dashboard.createABlockList') +
           '</button>' +
         '</div>';
       return;
@@ -188,7 +188,7 @@ var ui = {
       });
 
       if (!events || events.length === 0) {
-        container.innerHTML = '<div class="empty-state">No activity yet — blocked attempts will appear here</div>';
+        container.innerHTML = '<div class="empty-state">' + t('dashboard.noActivity') + '</div>';
         return;
       }
 
@@ -213,7 +213,7 @@ var ui = {
           '</div>';
       }).join('');
     } catch (e) {
-      container.innerHTML = '<div class="empty-state">No activity yet — blocked attempts will appear here</div>';
+      container.innerHTML = '<div class="empty-state">' + t('dashboard.noActivity') + '</div>';
     }
   },
 
@@ -327,17 +327,17 @@ var ui = {
   async toggleList(id, enabled) {
     try {
       await invoke('toggle_block_list', { id: id, enabled: enabled });
-      toast(enabled ? 'Enabled' : 'Disabled', 'success');
+      toast(enabled ? t('toast.enabled') : t('toast.disabled'), 'success');
       await this.refreshBlockLists();
     }
-    catch (e) { toast('Failed: ' + e, 'error'); }
+    catch (e) { toast(t('common.failed', { error: e }), 'error'); }
   },
 
   async deleteList(id, name) {
-    var ok = await showConfirm('Delete Block List', 'Delete "' + name + '" and all its rules? This cannot be undone.');
+    var ok = await showConfirm(t('confirm.deleteBlockList'), t('confirm.deleteBlockListMsg', { name: name }));
     if (!ok) return;
-    try { await invoke('delete_block_list', { id: id }); toast('Deleted', 'success'); this.refreshBlockLists(); }
-    catch (e) { toast('Failed: ' + e, 'error'); }
+    try { await invoke('delete_block_list', { id: id }); toast(t('toast.deleted'), 'success'); this.refreshBlockLists(); }
+    catch (e) { toast(t('common.failed', { error: e }), 'error'); }
   },
 
   showCreateListModal: function() {
@@ -2395,6 +2395,10 @@ function closeAllDropdowns() {
 // ─── Init ───────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', async function() {
+  // Initialize i18n before any UI rendering
+  await i18n.init();
+  i18n._applyToDOM();
+
   // Pull the app version from Cargo.toml (via the get_app_version Tauri
   // command) so the About section and any other version display stays in
   // sync with the workspace version automatically. No more hardcoded
@@ -2488,6 +2492,24 @@ document.addEventListener('DOMContentLoaded', async function() {
   var ba = document.getElementById('btn-add-app'); if (ba) ba.addEventListener('click', function() { ui.addApp(); });
   var bi = document.getElementById('btn-import-dropdown'); if (bi) bi.addEventListener('click', function(e) { e.stopPropagation(); ui.toggleImportDropdown(); });
   var bb = document.getElementById('btn-browse-apps'); if (bb) bb.addEventListener('click', function() { ui.browseApps(); });
+
+  // Language selector
+  var langSel = document.getElementById('setting-language');
+  if (langSel) {
+    langSel.value = i18n.locale;
+    langSel.addEventListener('change', async function() {
+      var newLocale = this.value;
+      var ok = await i18n.setLocale(newLocale);
+      if (ok) {
+        // Re-render current page and re-wire all event handlers
+        // The page needs a full re-render since all text changed
+        if (state.currentPage) ui.navigateTo(state.currentPage);
+      } else {
+        toast('Failed to switch language', 'error');
+        this.value = i18n.locale;
+      }
+    });
+  }
 
   // Real-time search filters
   var sw = document.getElementById('search-websites');
