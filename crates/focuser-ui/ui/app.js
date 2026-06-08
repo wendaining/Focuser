@@ -1990,7 +1990,7 @@ var ui = {
     var hours = Math.floor(totalMins / 60);
     var mins = totalMins % 60;
     var totalStr = (hours > 0 ? hours + 'h ' : '') + mins + 'm';
-    total.innerHTML = 'Round trip: <strong>' + totalStr + '</strong>';
+    total.innerHTML = t('modal.roundTrip', { time: totalStr });
 
     if (summary) {
       summary.innerHTML =

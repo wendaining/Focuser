@@ -15,13 +15,13 @@
         <span class="brand-text">Focuser</span>
       </div>
       <div class="sidebar-nav">
-        <button class="nav-item active" data-page="dashboard"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></button>
-        <button class="nav-item" data-page="blocklists"><i data-lucide="shield-check"></i><span>Block Lists</span></button>
-        <button class="nav-item" data-page="websites"><i data-lucide="globe"></i><span>Websites</span></button>
-        <button class="nav-item" data-page="apps"><i data-lucide="monitor"></i><span>Applications</span></button>
-        <button class="nav-item" data-page="schedule"><i data-lucide="calendar-clock"></i><span>Schedule</span></button>
-        <button class="nav-item" data-page="statistics"><i data-lucide="bar-chart-3"></i><span>Statistics</span></button>
-        <button class="nav-item" data-page="settings"><i data-lucide="settings"></i><span>Settings</span></button>
+        <button class="nav-item active" data-page="dashboard"><i data-lucide="layout-dashboard"></i><span data-i18n="nav.dashboard">Dashboard</span></button>
+        <button class="nav-item" data-page="blocklists"><i data-lucide="shield-check"></i><span data-i18n="nav.blockLists">Block Lists</span></button>
+        <button class="nav-item" data-page="websites"><i data-lucide="globe"></i><span data-i18n="nav.websites">Websites</span></button>
+        <button class="nav-item" data-page="apps"><i data-lucide="monitor"></i><span data-i18n="nav.applications">Applications</span></button>
+        <button class="nav-item" data-page="schedule"><i data-lucide="calendar-clock"></i><span data-i18n="nav.schedule">Schedule</span></button>
+        <button class="nav-item" data-page="statistics"><i data-lucide="bar-chart-3"></i><span data-i18n="nav.statistics">Statistics</span></button>
+        <button class="nav-item" data-page="settings"><i data-lucide="settings"></i><span data-i18n="nav.settings">Settings</span></button>
       </div>
       <div class="sidebar-footer">
         <div id="update-banner" class="update-banner" style="display:none">
@@ -45,15 +45,15 @@
       <!-- Dashboard -->
       <section id="page-dashboard" class="page active">
         <header class="page-header">
-          <h1>Dashboard</h1>
-          <p class="page-subtitle">Overview of your focus activity</p>
+          <h1 data-i18n="dashboard.title">Dashboard</h1>
+          <p class="page-subtitle" data-i18n="dashboard.subtitle">Overview of your focus activity</p>
         </header>
 
         <div class="stats-grid">
-          <div class="stat-card"><div class="stat-label"><i data-lucide="shield"></i> Active blocks</div><div class="stat-value accent" id="stat-active-blocks">0</div></div>
-          <div class="stat-card"><div class="stat-label"><i data-lucide="ban"></i> Blocked today</div><div class="stat-value" id="stat-blocked-today">0</div></div>
-          <div class="stat-card"><div class="stat-label"><i data-lucide="globe"></i> Sites blocked</div><div class="stat-value" id="stat-total-sites">0</div></div>
-          <div class="stat-card"><div class="stat-label"><i data-lucide="monitor"></i> Apps blocked</div><div class="stat-value" id="stat-total-apps">0</div></div>
+          <div class="stat-card"><div class="stat-label"><i data-lucide="shield"></i> <span data-i18n="dashboard.activeBlocks">Active blocks</span></div><div class="stat-value accent" id="stat-active-blocks">0</div></div>
+          <div class="stat-card"><div class="stat-label"><i data-lucide="ban"></i> <span data-i18n="dashboard.blockedToday">Blocked today</span></div><div class="stat-value" id="stat-blocked-today">0</div></div>
+          <div class="stat-card"><div class="stat-label"><i data-lucide="globe"></i> <span data-i18n="dashboard.sitesBlocked">Sites blocked</span></div><div class="stat-value" id="stat-total-sites">0</div></div>
+          <div class="stat-card"><div class="stat-label"><i data-lucide="monitor"></i> <span data-i18n="dashboard.appsBlocked">Apps blocked</span></div><div class="stat-value" id="stat-total-apps">0</div></div>
         </div>
 
         <!-- Focus Panels: Pomodoro + Allowances -->
