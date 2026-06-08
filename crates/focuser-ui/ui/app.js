@@ -206,7 +206,7 @@ var ui = {
         return '<div class="activity-row">' +
             '<div class="activity-icon">' + ico(iconName, 14) + '</div>' +
             '<div class="activity-main">' +
-              '<div class="activity-title">Blocked ' + (isKeyword ? 'search' : 'visit') + '</div>' +
+              '<div class="activity-title">' + (isKeyword ? t('dashboard.blockedSearch') : t('dashboard.blockedVisit')) + '</div>' +
               '<div class="activity-sub">' + esc(displayName) + '</div>' +
             '</div>' +
             '<div class="activity-time">' + ago + '</div>' +
@@ -611,7 +611,7 @@ var ui = {
       if (modeAlways) modeAlways.classList.add('active');
       if (modeScheduled) modeScheduled.classList.remove('active');
       if (summaryValue) summaryValue.textContent = '—';
-      if (summaryLabel) summaryLabel.textContent = 'Select a block list';
+      if (summaryLabel) summaryLabel.textContent = t('schedule.selectBlockList');
       this._setupScheduleDrag(grid);
       refreshIcons();
       return;
@@ -632,7 +632,7 @@ var ui = {
       if (modeAlways) modeAlways.classList.add('active');
       if (modeScheduled) modeScheduled.classList.remove('active');
       if (summaryValue) summaryValue.textContent = '24/7';
-      if (summaryLabel) summaryLabel.textContent = 'Always blocking';
+      if (summaryLabel) summaryLabel.textContent = t('schedule.alwaysBlocking');
     } else {
       if (heroPanel) heroPanel.style.display = 'none';
       if (gridPanel) gridPanel.style.display = 'block';
@@ -640,7 +640,7 @@ var ui = {
       if (modeScheduled) modeScheduled.classList.add('active');
       var hoursCount = slots.length;
       if (summaryValue) summaryValue.textContent = hoursCount + 'h';
-      if (summaryLabel) summaryLabel.textContent = 'per week blocked';
+      if (summaryLabel) summaryLabel.textContent = t('schedule.perWeekBlocked');
 
       // Populate active cells
       slots.forEach(function(slot) {
@@ -703,7 +703,7 @@ var ui = {
     var summaryValue = document.getElementById('schedule-summary-value');
     var summaryLabel = document.getElementById('schedule-summary-label');
     if (summaryValue) summaryValue.textContent = activeCount + 'h';
-    if (summaryLabel) summaryLabel.textContent = 'per week blocked';
+    if (summaryLabel) summaryLabel.textContent = t('schedule.perWeekBlocked');
   },
 
   _setupScheduleDrag: function(grid) {
@@ -1102,7 +1102,7 @@ var ui = {
     var di = 0;
     stats.forEach(function(s) { if (!domainColors[s.domain_or_app]) { domainColors[s.domain_or_app] = colors[di % colors.length]; di++; } });
 
-    var html = '<table class="data-table"><thead><tr><th>Domain / App</th><th>Blocked</th><th>Date</th></tr></thead><tbody>';
+    var html = '<table class="data-table"><thead><tr><th>' + t('statistics.tableDomainApp') + '</th><th>' + t('statistics.tableBlocked') + '</th><th>' + t('statistics.tableDate') + '</th></tr></thead><tbody>';
     stats.forEach(function(s) {
       var color = domainColors[s.domain_or_app] || 'var(--text-primary)';
       html += '<tr><td style="font-family:var(--font-mono);font-size:13px;">' +
@@ -1376,7 +1376,7 @@ var ui = {
   async importEntireInternet() {
     var lid = document.getElementById('website-list-select').value;
     if (!lid) { toast('Select a list first', 'error'); return; }
-    var ok = await showConfirm('Block Entire Internet', 'Block all websites? Only exceptions will remain accessible.');
+    var ok = await showConfirm(t('confirm.blockEntireInternet'), t('confirm.blockEntireInternetMsg'));
     if (!ok) return;
     try {
       await invoke('add_website_rule', { listId: lid, ruleType: 'entire_internet', value: '*' });
@@ -1416,7 +1416,7 @@ var ui = {
   },
 
   async clearAllWebsites() {
-    var ok = await showConfirm('Clear All Websites', 'Remove all blocked websites from every list? This cannot be undone.');
+    var ok = await showConfirm(t('confirm.clearAllWebsites'), t('confirm.clearAllWebsitesMsg'));
     if (!ok) return;
     try {
       var result = await invoke('clear_all_websites');
@@ -1427,7 +1427,7 @@ var ui = {
   },
 
   async clearAllApps() {
-    var ok = await showConfirm('Clear All Applications', 'Remove all blocked applications from every list? This cannot be undone.');
+    var ok = await showConfirm(t('confirm.clearAllApps'), t('confirm.clearAllAppsMsg'));
     if (!ok) return;
     try {
       var result = await invoke('clear_all_apps');
@@ -1484,8 +1484,8 @@ var ui = {
     catch (err) { toast('Invalid JSON file', 'error'); return; }
 
     var ok = await showConfirm(
-      'Import Configuration',
-      'This will REPLACE all existing block lists, rules, and schedules with the imported data. Statistics will be preserved. This cannot be undone. Continue?'
+      t('confirm.importConfig'),
+      t('confirm.importConfigMsg')
     );
     if (!ok) return;
 
@@ -1501,8 +1501,8 @@ var ui = {
 
   async clearStatistics() {
     var ok = await showConfirm(
-      'Clear Statistics',
-      'Remove all blocking statistics and activity data? Block lists will be preserved. This cannot be undone.'
+      t('confirm.clearStatistics'),
+      t('confirm.clearStatisticsMsg')
     );
     if (!ok) return;
     try {
@@ -1543,8 +1543,8 @@ var ui = {
 
   async resetSettings() {
     var ok = await showConfirm(
-      'Reset All Settings',
-      'Restore all settings (auto-start, notifications, etc.) to their default values? Block lists and statistics will be preserved.'
+      t('confirm.resetSettings'),
+      t('confirm.resetSettingsMsg')
     );
     if (!ok) return;
     try {
@@ -1557,14 +1557,14 @@ var ui = {
 
   async deleteAllData() {
     var ok = await showConfirm(
-      'Delete All Data',
-      'PERMANENTLY delete ALL block lists, rules, schedules, exceptions, statistics, and settings? This cannot be undone.'
+      t('confirm.deleteAllData'),
+      t('confirm.deleteAllDataMsg')
     );
     if (!ok) return;
     // Double confirmation for this destructive action
     var ok2 = await showConfirm(
-      'Are you absolutely sure?',
-      'This will erase everything. All your block lists and history will be gone forever.'
+      t('confirm.areYouSure'),
+      t('confirm.deleteAllDataMsg2')
     );
     if (!ok2) return;
     try {
@@ -2032,7 +2032,7 @@ var ui = {
   },
 
   pomodoroStop: async function() {
-    if (!confirm('End this focus session?')) return;
+    if (!confirm(t('confirm.endFocusSession'))) return;
     try {
       await invoke('pomodoro_stop');
       toast('Focus session ended', 'success');
@@ -2063,21 +2063,21 @@ var ui = {
     var pct = Math.min(100, (used / limit) * 100);
     var fillClass = item.exhausted ? 'exhausted' : (pct >= 80 ? 'warn' : '');
     var kind = String(a.target.kind || '').toLowerCase();
-    var kindLabel = kind === 'domain' ? 'Domain' : 'App';
+    var kindLabel = kind === 'domain' ? t('allowance.domainKind') : t('allowance.appKind');
     var target = a.target.value;
     var exhaustedCls = item.exhausted ? 'exhausted' : '';
 
     return '<div class="allowance-row ' + exhaustedCls + '" data-allowance-id="' + a.id + '">' +
       '<div class="allowance-target">' +
         '<div class="allowance-target-name">' + escapeHtml(target) + '</div>' +
-        '<div class="allowance-target-kind">' + kindLabel + (a.enabled ? '' : ' · disabled') + '</div>' +
+        '<div class="allowance-target-kind">' + kindLabel + (a.enabled ? '' : t('allowance.disabledSuffix')) + '</div>' +
       '</div>' +
       '<div class="allowance-progress-wrap">' +
         '<div class="allowance-progress-bar">' +
           '<div class="allowance-progress-fill ' + fillClass + '" style="width:' + pct + '%;"></div>' +
         '</div>' +
         '<div class="allowance-meta">' + ui._fmtMinutes(used) + ' / ' + ui._fmtMinutes(limit) +
-          (item.exhausted ? ' · blocked' : ' · ' + ui._fmtMinutes(item.remaining_secs) + ' left') +
+          (item.exhausted ? ' · ' + t('allowance.exhaustedBlocked') : ' · ' + ui._fmtMinutes(item.remaining_secs) + ' ' + t('status.left')) +
         '</div>' +
       '</div>' +
       '<div class="allowance-row-actions">' +
@@ -2127,7 +2127,7 @@ var ui = {
   },
 
   deleteAllowance: async function(id) {
-    if (!confirm('Delete this allowance?')) return;
+    if (!confirm(t('confirm.deleteAllowance'))) return;
     try {
       await invoke('allowance_delete', { id: id });
       toast('Deleted', 'success');
@@ -2152,9 +2152,9 @@ var ui = {
         if (!events || !events.length) return;
         events.forEach(function(n) {
           if (n.kind === 'Warning80') {
-            toast(n.target + ': ' + Math.round(n.used_secs / 60) + ' min used (80%)', 'warning');
+            toast(t('allowance.warning80', { target: n.target, used: Math.round(n.used_secs / 60) }), 'warning');
           } else if (n.kind === 'Exhausted') {
-            toast(n.target + ' blocked for today (quota reached)', 'error');
+            toast(t('allowance.exhaustedNotification', { target: n.target }), 'error');
           }
         });
       }).catch(function() {});
@@ -2188,27 +2188,27 @@ var ui = {
     // Always re-check when clicked
     var btn = document.getElementById('btn-check-update');
     var desc = document.getElementById('update-status-text');
-    if (btn) btn.textContent = 'Checking...';
-    if (desc) desc.textContent = 'Checking for updates...';
+    if (btn) btn.textContent = t('settings.checking');
+    if (desc) desc.textContent = t('settings.checking') + '...';
     invoke('check_for_update').then(function(result) {
       if (result && result.available) {
         ui._updateAvailable = true;
-        if (desc) desc.textContent = 'Version ' + result.version + ' is available';
-        if (btn) btn.textContent = 'Download & Install';
+        if (desc) desc.textContent = t('settings.updateAvailable', { version: result.version });
+        if (btn) btn.textContent = t('settings.downloadInstall');
         var b = document.getElementById('update-banner');
         var bt = document.getElementById('update-banner-text');
         if (b) b.style.display = 'block';
-        if (bt) bt.textContent = 'Update available (v' + result.version + ')';
-        toast('New version ' + result.version + ' available', 'success');
+        if (bt) bt.textContent = t('updater.updateAvailableBanner', { version: result.version });
+        toast(t('toast.newVersionAvailable', { version: result.version }), 'success');
       } else {
-        if (desc) desc.textContent = 'You have the latest version';
-        if (btn) btn.textContent = 'Check';
-        toast('Already up to date', 'success');
+        if (desc) desc.textContent = t('settings.latestVersion');
+        if (btn) btn.textContent = t('settings.check');
+        toast(t('toast.alreadyUpToDate'), 'success');
       }
     }).catch(function(e) {
-      if (desc) desc.textContent = 'Check failed';
-      if (btn) btn.textContent = 'Check';
-      toast('Check failed: ' + (e || ''), 'error');
+      if (desc) desc.textContent = t('settings.checkFailed');
+      if (btn) btn.textContent = t('settings.check');
+      toast(t('toast.checkFailed', { error: (e || '') }), 'error');
     });
   },
 
@@ -2220,24 +2220,24 @@ var ui = {
     var btext = document.getElementById('update-banner-text');
     var pw = document.getElementById('update-progress-wrap');
     var pf = document.getElementById('update-progress-fill');
-    if (btn) btn.textContent = 'Updating...';
-    if (desc) desc.textContent = 'Downloading and installing...';
-    if (btext) btext.textContent = 'Downloading & installing...';
+    if (btn) btn.textContent = t('toast.updating');
+    if (desc) desc.textContent = t('toast.downloading');
+    if (btext) btext.textContent = t('updater.downloading');
     if (pw) pw.style.display = 'flex';
     if (pf) { pf.style.width = '100%'; pf.style.animation = 'progressPulse 1.5s ease-in-out infinite'; }
     invoke('do_update').then(function() {
-      if (desc) desc.textContent = 'Restarting...';
-      if (btext) btext.textContent = 'Restarting...';
-      toast('Update installed, restarting...', 'success');
+      if (desc) desc.textContent = t('toast.restarting');
+      if (btext) btext.textContent = t('updater.restarting');
+      toast(t('toast.updateInstalled'), 'success');
     }).catch(function(e) {
       ui._updating = false;
       ui._updateAvailable = false;
       if (pw) pw.style.display = 'none';
       if (pf) pf.style.animation = '';
-      if (desc) desc.textContent = 'Update failed';
-      if (btext) btext.textContent = 'Failed, click to retry';
-      if (btn) btn.textContent = 'Check';
-      toast('Update failed: ' + (e || ''), 'error');
+      if (desc) desc.textContent = t('updater.updateFailed');
+      if (btext) btext.textContent = t('updater.failedRetry');
+      if (btn) btn.textContent = t('settings.check');
+      toast(t('toast.updateFailed'), 'error');
     });
   },
 };
@@ -2263,11 +2263,11 @@ function refreshIcons() {
 function formatTimeAgo(date) {
   var now = new Date();
   var diff = Math.floor((now - date) / 1000);
-  if (diff < 5) return 'just now';
-  if (diff < 60) return diff + 's ago';
-  if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
-  if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
-  return Math.floor(diff / 86400) + 'd ago';
+  if (diff < 5) return t('common.justNow');
+  if (diff < 60) return t('common.secondsAgo', { n: diff });
+  if (diff < 3600) return t('common.minutesAgo', { n: Math.floor(diff / 60) });
+  if (diff < 86400) return t('common.hoursAgo', { n: Math.floor(diff / 3600) });
+  return t('common.daysAgo', { n: Math.floor(diff / 86400) });
 }
 
 function showConfirm(title, message) {
