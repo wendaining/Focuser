@@ -143,7 +143,9 @@ var i18n = {
       locale = await invoke('get_setting', { key: 'ui_language', default: '' });
     } catch (e) {
       // 2. Default to English for all new users.
-    //    Users can switch language in Settings.
+      //    Users can switch language in Settings.
+    }
+
     if (!locale) {
       locale = 'en';
     }
