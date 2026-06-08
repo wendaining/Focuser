@@ -53,4 +53,15 @@ ${StrRep}
   Delete "$LOCALAPPDATA\Focuser\native-messaging\com.focuser.native.json"
   Delete "$LOCALAPPDATA\Focuser\native-messaging\com.focuser.native.firefox.json"
   RMDir "$LOCALAPPDATA\Focuser\native-messaging"
+
+  ; Tauri's generated "Delete app data" block removes paths based on the
+  ; bundle identifier. Focuser stores SQLite data through Rust ProjectDirs,
+  ; which resolves on Windows to %APPDATA%\focuser\Focuser\data.
+  ${If} $DeleteAppDataCheckboxState = 1
+    RMDir /r "$APPDATA\focuser\Focuser"
+    RMDir "$APPDATA\focuser"
+    RMDir /r "$LOCALAPPDATA\focuser\Focuser"
+    RMDir "$LOCALAPPDATA\focuser"
+    RMDir /r "$LOCALAPPDATA\Focuser"
+  ${EndIf}
 !macroend
