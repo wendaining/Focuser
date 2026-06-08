@@ -790,7 +790,7 @@ var ui = {
       var stats = await invoke('get_stats', { from: week, to: today });
       this._renderBarChart(stats || []);
       this._renderStatsTable(stats || [], c);
-    } catch (e) { c.innerHTML = '<div class="empty-state">No data yet</div>'; }
+    } catch (e) { c.innerHTML = '<div class="empty-state">' + t('common.noData') + '</div>'; }
 
     // Fetch fine-grained events for line chart
     var rangeMs = this._rangeToMs(this._statsRange);
@@ -813,7 +813,7 @@ var ui = {
     try {
       var rows = await invoke('pomodoro_history', { days: 30 });
       if (!rows || !rows.length) {
-        c.innerHTML = '<div class="empty-state">No sessions yet — start a Pomodoro from the Dashboard</div>';
+        c.innerHTML = '<div class="empty-state">' + t('statistics.noSessions') + '</div>';
         return;
       }
       var total_cycles = 0, total_secs = 0;
@@ -832,11 +832,11 @@ var ui = {
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 14px 12px;">' +
           '<div><div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px;">Sessions</div><div style="font-size:24px;font-weight:700;color:var(--text);">' + rows.length + '</div></div>' +
           '<div><div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px;">Cycles completed</div><div style="font-size:24px;font-weight:700;color:var(--text);">' + total_cycles + '</div></div>' +
-          '<div style="grid-column:1/-1;"><div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px;">Total focus time</div><div style="font-size:16px;font-weight:600;color:var(--text);">' + Math.round(total_secs / 60) + ' minutes</div></div>' +
+          '<div style="grid-column:1/-1;"><div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px;">' + t('statistics.totalFocusTime') + '</div><div style="font-size:16px;font-weight:600;color:var(--text);">' + t('statistics.minutes', { n: Math.round(total_secs / 60) }) + '</div></div>' +
         '</div>' +
         '<div style="padding:0 14px 10px;">' + listHtml + '</div>';
     } catch (e) {
-      c.innerHTML = '<div class="empty-state">Unable to load history</div>';
+      c.innerHTML = '<div class="empty-state">' + t('common.unableToLoad') + '</div>';
     }
   },
 
@@ -846,13 +846,13 @@ var ui = {
     try {
       var list = await invoke('allowance_list');
       if (!list || !list.length) {
-        c.innerHTML = '<div class="empty-state">No allowances configured</div>';
+        c.innerHTML = '<div class="empty-state">' + t('statistics.noAllowancesConfigured') + '</div>';
         return;
       }
       c.innerHTML = '<div style="padding:10px 14px;">' + list.map(ui._renderAllowanceRow).join('') + '</div>';
       refreshIcons();
     } catch (e) {
-      c.innerHTML = '<div class="empty-state">Unable to load</div>';
+      c.innerHTML = '<div class="empty-state">' + t('common.unableToLoad') + '</div>';
     }
   },
 
@@ -893,7 +893,7 @@ var ui = {
       ctx.fillStyle = '#5e5e72';
       ctx.font = '13px Inter, -apple-system, sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('No events in this time range', w / 2, h / 2);
+      ctx.fillText(t('statistics.noEvents'), w / 2, h / 2);
       if (legendEl) legendEl.innerHTML = '';
       return;
     }
@@ -1094,7 +1094,7 @@ var ui = {
 
   _renderStatsTable: function(stats, container) {
     if (!stats || stats.length === 0) {
-      container.innerHTML = '<div class="empty-state">No data yet. Blocked attempts will appear here.</div>';
+      container.innerHTML = '<div class="empty-state">' + t('statistics.noStatsYet') + '</div>';
       return;
     }
     var colors = this._chartColors;
@@ -2046,13 +2046,13 @@ var ui = {
     try {
       var list = await invoke('allowance_list');
       if (!list || list.length === 0) {
-        container.innerHTML = '<div class="empty-state">No allowances — add one from the Websites tab to cap daily usage.</div>';
+        container.innerHTML = '<div class="empty-state">' + t('dashboard.noAllowances') + '</div>';
         return;
       }
       container.innerHTML = list.slice(0, 6).map(ui._renderAllowanceRow).join('');
       refreshIcons();
     } catch (e) {
-      container.innerHTML = '<div class="empty-state">Unable to load allowances</div>';
+      container.innerHTML = '<div class="empty-state">' + t('common.unableToLoad') + '</div>';
     }
   },
 
@@ -2093,13 +2093,13 @@ var ui = {
     try {
       var list = await invoke('allowance_list');
       if (!list || list.length === 0) {
-        container.innerHTML = '<div class="empty-state">No allowances yet — add one above to cap daily usage.</div>';
+        container.innerHTML = '<div class="empty-state">' + t('allowance.noAllowancesYet') + '</div>';
         return;
       }
       container.innerHTML = list.map(ui._renderAllowanceRow).join('');
       refreshIcons();
     } catch (e) {
-      container.innerHTML = '<div class="empty-state">Unable to load allowances</div>';
+      container.innerHTML = '<div class="empty-state">' + t('common.unableToLoad') + '</div>';
     }
   },
 
