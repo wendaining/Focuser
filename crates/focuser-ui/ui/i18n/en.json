@@ -58,7 +58,8 @@
     "failed": "Failed: {{error}}",
     "unableToLoad": "Unable to load",
     "noData": "No data",
-    "unnamed": "Unnamed"
+    "unnamed": "Unnamed",
+    "noOptions": "No options"
   },
 
   "toast": {
@@ -276,15 +277,22 @@
     "noWebsitesBlocked": "No websites blocked",
     "selectListToView": "Select a block list to view its websites",
     "addException": "Add Exception",
+    "addExceptionBtn": "Add Exception",
     "exceptionHint": "Excepted domains will NOT be blocked even if they match a blocking rule.",
-    "exceptionsWhitelist": "Exceptions (Whitelist)",
+    "exceptionsHeading": "Exceptions (Whitelist)",
     "noExceptions": "No exceptions — all matching sites will be blocked",
-    "noExceptionsDesc": "No exceptions — all matching sites will be blocked",
     "schedule": "Schedule",
     "alwaysActiveShort": "Always Active",
     "noHoursSet": "no hours set",
     "slots": "{{count}} slots",
-    "editSchedule": "Edit Schedule"
+    "editSchedule": "Edit Schedule",
+    "importFromText": "Import from text file",
+    "importFromJson": "Import from JSON file",
+    "premadeLists": "Pre-made lists",
+    "allUrlsContaining": "All URLs containing...",
+    "blockEntireInternet": "Block entire internet",
+    "placeholderDomain": "e.g. reddit.com",
+    "placeholderException": "e.g. docs.google.com"
   },
 
   "apps": {
@@ -295,7 +303,8 @@
     "searchApps": "Search apps...",
     "blockedApplications": "Blocked Applications",
     "noAppsBlocked": "No applications blocked",
-    "selectListToViewApps": "Select a block list to view its applications"
+    "selectListToViewApps": "Select a block list to view its applications",
+    "placeholderExe": "e.g. steam.exe"
   },
 
   "schedule": {
@@ -337,6 +346,7 @@
     "todaysSummary": "Today's summary",
     "sessions": "Sessions",
     "cyclesCompleted": "Cycles completed",
+    "cycleUnit": "cycle",
     "totalFocusTime": "Total focus time",
     "minutes": "{{n}} minutes",
     "noSessions": "No sessions yet — start a Pomodoro from the Dashboard",
@@ -433,7 +443,9 @@
     "warning80": "{{target}}: {{used}} min used (80%)",
     "exhaustedNotification": "{{target}} blocked for today (quota reached)",
     "resetToday": "Reset today",
-    "todayReset": "Today reset"
+    "todayReset": "Today reset",
+    "placeholderValue": "e.g. youtube.com",
+    "placeholderMinutes": "Minutes/day"
   },
 
   "updater": {

@@ -149,7 +149,7 @@ var ui = {
     }
 
     container.innerHTML = activeBlocks.map(function(b) {
-      var name = b.block_list_name || 'Unnamed';
+      var name = b.block_list_name || t('common.unnamed');
       var color = colorFor(name);
       var initial = name.trim().charAt(0).toUpperCase() || '?';
       var avatarStyle = 'background:' + color.bg + ';box-shadow: 0 4px 14px ' + color.shadow + ', inset 0 1px 0 rgba(255,255,255,0.2);';
@@ -159,12 +159,12 @@ var ui = {
           '<div class="mini-list-info">' +
             '<div class="mini-list-name">' + esc(name) + '</div>' +
             '<div class="mini-list-meta">' +
-              '<span>' + ico('globe', 12) + ' ' + (b.blocked_websites || 0) + ' sites</span>' +
+              '<span>' + ico('globe', 12) + ' ' + (b.blocked_websites || 0) + ' ' + t('common.sites') + '</span>' +
               '<span class="dot-sep"></span>' +
-              '<span>' + ico('monitor', 12) + ' ' + (b.blocked_apps || 0) + ' apps</span>' +
+              '<span>' + ico('monitor', 12) + ' ' + (b.blocked_apps || 0) + ' ' + t('common.apps') + '</span>' +
             '</div>' +
           '</div>' +
-          '<div class="mini-list-pulse" title="Active"></div>' +
+          '<div class="mini-list-pulse" title="' + t('status.active') + '"></div>' +
           '<div class="mini-list-arrow">' + ico('chevron-right', 16) + '</div>' +
         '</div>';
     }).join('');
@@ -311,7 +311,7 @@ var ui = {
 
   updateSelects: function() {
     var opts = state.blockLists.map(function(l) { return '<option value="' + l.id + '">' + esc(l.name) + '</option>'; }).join('');
-    var def = '<option value="">Select list...</option>';
+    var def = '<option value="">' + t('common.selectList') + '</option>';
     ['website-list-select','app-list-select','schedule-list-select','exception-list-select'].forEach(function(id) {
       var el = document.getElementById(id);
       if (!el) return;
@@ -824,14 +824,14 @@ var ui = {
         var when = d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:12px;">' +
           '<span style="color:var(--text-muted);">' + escapeHtml(when) + '</span>' +
-          '<span style="color:var(--text);font-weight:600;">' + r.completed_cycles + ' cycle' + (r.completed_cycles === 1 ? '' : 's') + '</span>' +
+          '<span style="color:var(--text);font-weight:600;">' + r.completed_cycles + ' ' + t('statistics.cycleUnit') + (r.completed_cycles === 1 ? '' : 's') + '</span>' +
         '</div>';
       }).join('');
 
       c.innerHTML =
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 14px 12px;">' +
-          '<div><div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px;">Sessions</div><div style="font-size:24px;font-weight:700;color:var(--text);">' + rows.length + '</div></div>' +
-          '<div><div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px;">Cycles completed</div><div style="font-size:24px;font-weight:700;color:var(--text);">' + total_cycles + '</div></div>' +
+          '<div><div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px;">' + t('statistics.sessions') + '</div><div style="font-size:24px;font-weight:700;color:var(--text);">' + rows.length + '</div></div>' +
+          '<div><div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px;">' + t('statistics.cyclesCompleted') + '</div><div style="font-size:24px;font-weight:700;color:var(--text);">' + total_cycles + '</div></div>' +
           '<div style="grid-column:1/-1;"><div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px;">' + t('statistics.totalFocusTime') + '</div><div style="font-size:16px;font-weight:600;color:var(--text);">' + t('statistics.minutes', { n: Math.round(total_secs / 60) }) + '</div></div>' +
         '</div>' +
         '<div style="padding:0 14px 10px;">' + listHtml + '</div>';
@@ -1031,7 +1031,7 @@ var ui = {
           var bt = new Date(fromDate.getTime() + hit.bucketIndex * bucketMs);
           tooltipEl.style.display = 'block';
           tooltipEl.innerHTML = '<div style="font-weight:600;color:var(--text-primary);margin-bottom:4px;">' + esc(hit.domain) + '</div>' +
-            '<div style="color:var(--text-secondary);"><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:' + hit.color + ';margin-right:6px;"></span>' + hit.count + ' blocked</div>' +
+            '<div style="color:var(--text-secondary);"><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:' + hit.color + ';margin-right:6px;"></span>' + t('statistics.blockedCount', { count: hit.count }) + '</div>' +
             '<div style="color:var(--text-muted);font-size:11px;margin-top:2px;">' + bt.toLocaleString() + '</div>';
           var tx = hit.x + 14;
           if (tx + 180 > w) tx = hit.x - 180;
@@ -1260,7 +1260,7 @@ var ui = {
     var sel = document.getElementById('exception-list-select');
     if (sel) {
       var opts = state.blockLists.map(function(l) { return '<option value="' + l.id + '">' + esc(l.name) + '</option>'; }).join('');
-      sel.innerHTML = '<option value="">Select list...</option>' + opts;
+      sel.innerHTML = '<option value="">' + t('common.selectList') + '</option>' + opts;
     }
     var c = document.getElementById('exceptions-list');
     var all = [];
@@ -1273,9 +1273,9 @@ var ui = {
         all.push({ id: e.id, value: val, listName: l.name, listId: l.id });
       });
     });
-    if (all.length === 0) { c.innerHTML = '<div class="empty-state">No exceptions — all matching sites will be blocked</div>'; return; }
+    if (all.length === 0) { c.innerHTML = '<div class="empty-state">' + t('websites.noExceptions') + '</div>'; return; }
     c.innerHTML = all.map(function(r) {
-      return '<div class="rule-item"><div class="rule-info"><span class="rule-type-badge" style="background:var(--success-dim);color:var(--success);">allowed</span><span class="rule-value">' + esc(r.value) + '</span><span class="rule-list-name">' + esc(r.listName) + '</span></div>' +
+      return '<div class="rule-item"><div class="rule-info"><span class="rule-type-badge" style="background:var(--success-dim);color:var(--success);">' + t('common.allowed') + '</span><span class="rule-value">' + esc(r.value) + '</span><span class="rule-list-name">' + esc(r.listName) + '</span></div>' +
         '<button class="btn-icon" data-action="remove-exception" data-list-id="' + r.listId + '" data-exc-id="' + r.id + '">' + ico('x', 14) + '</button></div>';
     }).join('');
     refreshIcons();
@@ -1706,9 +1706,9 @@ var ui = {
   },
 
   _pomodoroPresets: {
-    classic: { name: 'Classic', work: 25, short: 5, long: 15, cycles: 4, desc: 'Balanced focus with regular breaks — the original technique.' },
-    long:    { name: 'Long',    work: 50, short: 10, long: 30, cycles: 3, desc: 'Deep-work mode. Longer runs, longer recovery.' },
-    sprint:  { name: 'Sprint',  work: 15, short: 3,  long: 10, cycles: 4, desc: 'Fast bursts for admin tasks or warming up.' },
+    classic: { name: function() { return t('pomodoro.classicName'); }, work: 25, short: 5, long: 15, cycles: 4, desc: function() { return t('pomodoro.classicDesc'); } },
+    long:    { name: function() { return t('pomodoro.longName'); },    work: 50, short: 10, long: 30, cycles: 3, desc: function() { return t('pomodoro.longDesc'); } },
+    sprint:  { name: function() { return t('pomodoro.sprintName'); },  work: 15, short: 3,  long: 10, cycles: 4, desc: function() { return t('pomodoro.sprintDesc'); } },
   },
 
   openPomodoroStartModal: async function() {
@@ -1728,9 +1728,9 @@ var ui = {
 
     var listMeta = function(l) {
       var extra = [];
-      if (l.websites && l.websites.length) extra.push(l.websites.length + ' site' + (l.websites.length === 1 ? '' : 's'));
-      if (l.applications && l.applications.length) extra.push(l.applications.length + ' app' + (l.applications.length === 1 ? '' : 's'));
-      return extra.length ? extra.join(' · ') : 'empty list';
+      if (l.websites && l.websites.length) extra.push(l.websites.length + ' ' + t('common.site') + (l.websites.length === 1 ? '' : 's'));
+      if (l.applications && l.applications.length) extra.push(l.applications.length + ' ' + t('common.app') + (l.applications.length === 1 ? '' : 's'));
+      return extra.length ? extra.join(' · ') : t('modal.emptyList');
     };
     var optionsHtml = lists.map(function(l, i) {
       return '<button type="button" class="pomo-dropdown-option' + (i === 0 ? ' selected' : '') + '" data-list-id="' + l.id + '" data-list-name="' + escapeHtml(l.name) + '" data-list-meta="' + escapeHtml(listMeta(l)) + '">' +
@@ -1743,12 +1743,12 @@ var ui = {
 
     var presetCardHtml = function(key, recommended) {
       var p = ui._pomodoroPresets[key];
-      var rec = recommended ? '<span class="pomo-recommended">Recommended</span>' : '';
+      var rec = recommended ? '<span class="pomo-recommended">' + t('modal.recommended') + '</span>' : '';
       return '<button class="pomo-preset-card-v2" data-preset="' + key + '">' +
         rec +
-        '<div class="pomo-preset-name">' + p.name + '</div>' +
+        '<div class="pomo-preset-name">' + p.name() + '</div>' +
         '<div class="pomo-preset-ratio">' + p.work + '<span class="slash">/</span>' + p.short + '</div>' +
-        '<div class="pomo-preset-desc">' + p.desc + '</div>' +
+        '<div class="pomo-preset-desc">' + p.desc() + '</div>' +
       '</button>';
     };
 
@@ -1757,14 +1757,14 @@ var ui = {
         '<div class="pomo-modal-head">' +
           '<h3>' +
             '<span class="pomo-icon-ring"><i data-lucide="timer"></i></span>' +
-            'Start a Focus Session' +
+            t('modal.startFocusSession') +
           '</h3>' +
-          '<p>Pomodoro alternates <strong style="color:#c4b5fd;">focus</strong> and <strong style="color:#67e8f9;">break</strong> phases automatically. After a set of work cycles, you earn a <strong style="color:#fde047;">longer break</strong>. Your chosen block list toggles on during work, off during breaks.</p>' +
+          '<p>' + t('modal.pomodoroDescription') + '</p>' +
         '</div>' +
 
         '<div class="pomo-modal-body">' +
           '<div class="pomo-section">' +
-            '<div class="pomo-section-label">Which blocks apply during work?</div>' +
+            '<div class="pomo-section-label">' + t('modal.whichBlocksApply') + '</div>' +
             '<div class="pomo-dropdown" id="pomo-list-dropdown" data-value="' + firstList.id + '">' +
               '<button type="button" class="pomo-dropdown-trigger" id="pomo-list-trigger">' +
                 '<span class="pomo-dd-main" id="pomo-list-main">' + escapeHtml(firstList.name) + '</span>' +
@@ -1776,37 +1776,37 @@ var ui = {
           '</div>' +
 
           '<div class="pomo-section">' +
-            '<div class="pomo-section-label">Pick a rhythm</div>' +
+            '<div class="pomo-section-label">' + t('modal.pickRhythm') + '</div>' +
             '<div class="pomo-preset-grid">' +
               presetCardHtml('classic', true) +
               presetCardHtml('long', false) +
               presetCardHtml('sprint', false) +
             '</div>' +
             '<button class="pomo-custom-card" data-preset="custom">' +
-              '<span class="pomo-custom-left"><i data-lucide="sliders-horizontal"></i> Custom rhythm</span>' +
+              '<span class="pomo-custom-left"><i data-lucide="sliders-horizontal"></i> ' + t('modal.customRhythm') + '</span>' +
               '<i data-lucide="chevron-down" class="pomo-custom-chevron"></i>' +
             '</button>' +
             '<div class="pomo-custom-body" id="pomo-custom-body">' +
               '<div class="pomo-custom-grid">' +
                 '<div class="pomo-field">' +
-                  '<label>Work (minutes)</label>' +
+                  '<label>' + t('modal.workMinutes') + '</label>' +
                   '<input type="number" id="pomo-work" min="1" max="480" value="25">' +
-                  '<span class="pomo-field-hint">How long each focus block lasts.</span>' +
+                  '<span class="pomo-field-hint">' + t('modal.workHint') + '</span>' +
                 '</div>' +
                 '<div class="pomo-field">' +
-                  '<label>Short break (minutes)</label>' +
+                  '<label>' + t('modal.shortBreakMinutes') + '</label>' +
                   '<input type="number" id="pomo-short" min="1" max="120" value="5">' +
-                  '<span class="pomo-field-hint">Rest between each work cycle.</span>' +
+                  '<span class="pomo-field-hint">' + t('modal.shortBreakHint') + '</span>' +
                 '</div>' +
                 '<div class="pomo-field">' +
-                  '<label>Long break (minutes)</label>' +
+                  '<label>' + t('modal.longBreakMinutes') + '</label>' +
                   '<input type="number" id="pomo-long" min="1" max="120" value="15">' +
-                  '<span class="pomo-field-hint">Bigger rest after every set of cycles.</span>' +
+                  '<span class="pomo-field-hint">' + t('modal.longBreakHint') + '</span>' +
                 '</div>' +
                 '<div class="pomo-field">' +
-                  '<label>Work cycles per set</label>' +
+                  '<label>' + t('modal.workCyclesPerSet') + '</label>' +
                   '<input type="number" id="pomo-cycles" min="1" max="20" value="4">' +
-                  '<span class="pomo-field-hint">How many work cycles before the long break.</span>' +
+                  '<span class="pomo-field-hint">' + t('modal.cyclesHint') + '</span>' +
                 '</div>' +
               '</div>' +
             '</div>' +
@@ -1815,14 +1815,14 @@ var ui = {
           '<div class="pomo-section">' +
             '<div class="pomo-preview">' +
               '<div class="pomo-preview-header">' +
-                '<div class="pomo-preview-title">Your session rhythm</div>' +
+                '<div class="pomo-preview-title">' + t('modal.sessionRhythm') + '</div>' +
                 '<div class="pomo-preview-total" id="pomo-preview-total">—</div>' +
               '</div>' +
               '<div class="pomo-preview-strip" id="pomo-preview-strip"></div>' +
               '<div class="pomo-preview-legend">' +
-                '<div class="pomo-preview-legend-item"><span class="pomo-preview-legend-dot work"></span> Work</div>' +
-                '<div class="pomo-preview-legend-item"><span class="pomo-preview-legend-dot short"></span> Short break</div>' +
-                '<div class="pomo-preview-legend-item"><span class="pomo-preview-legend-dot long"></span> Long break</div>' +
+                '<div class="pomo-preview-legend-item"><span class="pomo-preview-legend-dot work"></span> ' + t('modal.work') + '</div>' +
+                '<div class="pomo-preview-legend-item"><span class="pomo-preview-legend-dot short"></span> ' + t('modal.shortBreak') + '</div>' +
+                '<div class="pomo-preview-legend-item"><span class="pomo-preview-legend-dot long"></span> ' + t('modal.longBreak') + '</div>' +
               '</div>' +
             '</div>' +
           '</div>' +
@@ -1835,8 +1835,8 @@ var ui = {
         '</div>' +
 
         '<div class="pomo-modal-footer">' +
-          '<button class="btn btn-secondary" id="pomo-cancel">Cancel</button>' +
-          '<button class="btn btn-primary" id="pomo-start"><i data-lucide="play"></i> Start session</button>' +
+          '<button class="btn btn-secondary" id="pomo-cancel">' + t('common.cancel') + '</button>' +
+          '<button class="btn btn-primary" id="pomo-start"><i data-lucide="play"></i> ' + t('modal.startSession') + '</button>' +
         '</div>' +
       '</div>';
 
@@ -1982,9 +1982,9 @@ var ui = {
     strip.innerHTML = segs.map(function(seg) {
       var pct = Math.max(3, (seg.mins / totalMins) * 100);
       var label = seg.mins >= 5 ? seg.mins + 'm' : '';
+      var segTitle = seg.kind === 'work' ? t('modal.work') : seg.kind === 'short' ? t('modal.shortBreak') : t('modal.longBreak');
       return '<div class="pomo-preview-seg ' + seg.kind + '" style="flex:' + seg.mins + ' 0 0;min-width:0;" title="' +
-        (seg.kind === 'work' ? 'Work' : seg.kind === 'short' ? 'Short break' : 'Long break') +
-        ' — ' + seg.mins + ' min">' + label + '</div>';
+        segTitle + ' — ' + seg.mins + ' ' + t('statistics.minutes', { n: '' }).trim() + '">' + label + '</div>';
     }).join('');
 
     var hours = Math.floor(totalMins / 60);
@@ -1993,9 +1993,9 @@ var ui = {
     total.innerHTML = t('modal.roundTrip', { time: totalStr });
 
     if (summary) {
-      summary.innerHTML =
-        '<strong>' + cycles + '×</strong> ' + workMin + 'm focus + ' + shortMin + 'm break, then a <strong>' + longMin + 'm long break</strong>. ' +
-        'Then the rhythm repeats until you stop it.';
+      summary.innerHTML = t('modal.summaryPattern', {
+        cycles: cycles, work: workMin, short: shortMin, long: longMin
+      });
     }
   },
 
@@ -2081,8 +2081,8 @@ var ui = {
         '</div>' +
       '</div>' +
       '<div class="allowance-row-actions">' +
-        '<button data-action="reset-allowance" data-id="' + a.id + '" title="Reset today"><i data-lucide="rotate-ccw"></i></button>' +
-        '<button data-action="delete-allowance" data-id="' + a.id + '" class="danger" title="Delete"><i data-lucide="trash-2"></i></button>' +
+        '<button data-action="reset-allowance" data-id="' + a.id + '" title="' + t('allowance.resetToday') + '"><i data-lucide="rotate-ccw"></i></button>' +
+        '<button data-action="delete-allowance" data-id="' + a.id + '" class="danger" title="' + t('common.delete') + '"><i data-lucide="trash-2"></i></button>' +
       '</div>' +
     '</div>';
   },
@@ -2691,7 +2691,7 @@ function enhanceSelect(selectEl) {
     menu.innerHTML = '';
     var opts = Array.from(selectEl.options);
     if (opts.length === 0) {
-      menu.innerHTML = '<div class="dd-empty">No options</div>';
+      menu.innerHTML = '<div class="dd-empty">' + t('common.noOptions') + '</div>';
       return;
     }
     opts.forEach(function(opt, i) {

@@ -58,7 +58,8 @@
     "failed": "失败：{{error}}",
     "unableToLoad": "无法加载",
     "noData": "暂无数据",
-    "unnamed": "未命名"
+    "unnamed": "未命名",
+    "noOptions": "无选项"
   },
 
   "toast": {
@@ -276,15 +277,22 @@
     "noWebsitesBlocked": "暂无已拦截网站",
     "selectListToView": "选择一个拦截列表以查看其网站",
     "addException": "添加例外",
+    "addExceptionBtn": "添加例外",
     "exceptionHint": "例外域名即使匹配拦截规则也不会被拦截。",
-    "exceptionsWhitelist": "例外（白名单）",
+    "exceptionsHeading": "例外（白名单）",
     "noExceptions": "暂无例外 — 所有匹配的网站将被拦截",
-    "noExceptionsDesc": "暂无例外 — 所有匹配的网站将被拦截",
     "schedule": "时间表",
     "alwaysActiveShort": "始终生效",
     "noHoursSet": "未设置时段",
     "slots": "{{count}} 个时段",
-    "editSchedule": "编辑时间表"
+    "editSchedule": "编辑时间表",
+    "importFromText": "从文本文件导入",
+    "importFromJson": "从 JSON 文件导入",
+    "premadeLists": "预制列表",
+    "allUrlsContaining": "所有包含...的 URL",
+    "blockEntireInternet": "拦截整个互联网",
+    "placeholderDomain": "例如：reddit.com",
+    "placeholderException": "例如：docs.google.com"
   },
 
   "apps": {
@@ -295,7 +303,8 @@
     "searchApps": "搜索应用...",
     "blockedApplications": "已拦截应用",
     "noAppsBlocked": "暂无已拦截应用",
-    "selectListToViewApps": "选择一个拦截列表以查看其应用"
+    "selectListToViewApps": "选择一个拦截列表以查看其应用",
+    "placeholderExe": "例如：steam.exe"
   },
 
   "schedule": {
@@ -337,6 +346,7 @@
     "todaysSummary": "今日摘要",
     "sessions": "会话",
     "cyclesCompleted": "已完成周期",
+    "cycleUnit": "周期",
     "totalFocusTime": "总专注时间",
     "minutes": "{{n}} 分钟",
     "noSessions": "暂无会话 — 从仪表盘启动番茄钟开始",
@@ -433,7 +443,9 @@
     "warning80": "{{target}}：已使用 {{used}} 分钟（80%）",
     "exhaustedNotification": "{{target}} 今日已用完（配额已满）",
     "resetToday": "重置今日",
-    "todayReset": "今日已重置"
+    "todayReset": "今日已重置",
+    "placeholderValue": "例如：youtube.com",
+    "placeholderMinutes": "分钟/天"
   },
 
   "updater": {

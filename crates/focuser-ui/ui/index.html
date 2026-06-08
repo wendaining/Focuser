@@ -36,7 +36,7 @@
         </div>
         <div id="service-status" class="status-indicator online">
           <span class="status-dot"></span>
-          <span class="status-text">Active</span>
+          <span class="status-text" data-i18n="nav.active">Active</span>
         </div>
       </div>
     </nav>
@@ -65,9 +65,9 @@
             </div>
             <div class="panel-body" id="pomodoro-body">
               <div class="pomodoro-idle">
-                <p class="pomodoro-idle-text">Start a focus session to block distractions in work/break cycles.</p>
+                <p class="pomodoro-idle-text" data-i18n="dashboard.startFocusDesc">Start a focus session to block distractions in work/break cycles.</p>
                 <button class="btn btn-primary" id="btn-start-pomodoro">
-                  <i data-lucide="play"></i> Start Focus Session
+                  <i data-lucide="play"></i> <span data-i18n="dashboard.startFocusSession">Start Focus Session</span>
                 </button>
               </div>
             </div>
@@ -77,11 +77,11 @@
             <div class="panel-header">
               <h3><i data-lucide="hourglass"></i> <span data-i18n="dashboard.todaysAllowances">Today's Allowances</span></h3>
               <button class="btn btn-sm btn-ghost" data-page="websites" data-target-tab="websites-tab-allowances" style="font-size:11px;padding:5px 12px;">
-                Manage <i data-lucide="arrow-right" style="width:12px;height:12px;"></i>
+                <span data-i18n="common.manage">Manage</span> <i data-lucide="arrow-right" style="width:12px;height:12px;"></i>
               </button>
             </div>
             <div class="panel-body" id="dashboard-allowances">
-              <div class="empty-state">No allowances — add one from the Websites tab to cap daily usage.</div>
+              <div class="empty-state" data-i18n="dashboard.noAllowances">No allowances — add one from the Websites tab to cap daily usage.</div>
             </div>
           </div>
         </div>
@@ -89,51 +89,51 @@
         <div class="dashboard-panels">
           <div class="panel">
             <div class="panel-header">
-              <h3><i data-lucide="shield-check"></i> Active Block Lists</h3>
+              <h3><i data-lucide="shield-check"></i> <span data-i18n="dashboard.activeBlockLists">Active Block Lists</span></h3>
               <button class="btn btn-sm btn-ghost" data-page="blocklists" style="font-size:11px;padding:5px 12px;">
-                View all <i data-lucide="arrow-right" style="width:12px;height:12px;"></i>
+                <span data-i18n="common.viewAll">View all</span> <i data-lucide="arrow-right" style="width:12px;height:12px;"></i>
               </button>
             </div>
             <div class="panel-body" id="dashboard-active-lists">
-              <div class="empty-state">No active blocks</div>
+              <div class="empty-state" data-i18n="dashboard.noActiveBlocks">No active blocks</div>
             </div>
           </div>
 
           <div class="panel">
             <div class="panel-header">
-              <h3><i data-lucide="zap"></i> Quick Actions</h3>
+              <h3><i data-lucide="zap"></i> <span data-i18n="dashboard.quickActions">Quick Actions</span></h3>
             </div>
             <div class="panel-body">
               <div class="quick-actions-grid">
                 <button class="quick-action-card qa-accent" data-page="blocklists">
                   <div class="qa-icon"><i data-lucide="shield-check"></i></div>
                   <div class="qa-text">
-                    <span class="qa-title">Manage Block Lists</span>
-                    <span class="qa-sub">Create and edit profiles</span>
+                    <span class="qa-title" data-i18n="dashboard.manageBlockLists">Manage Block Lists</span>
+                    <span class="qa-sub" data-i18n="dashboard.manageBlockListsDesc">Create and edit profiles</span>
                   </div>
                   <i data-lucide="chevron-right" class="qa-arrow"></i>
                 </button>
                 <button class="quick-action-card qa-success" data-page="websites">
                   <div class="qa-icon"><i data-lucide="globe"></i></div>
                   <div class="qa-text">
-                    <span class="qa-title">Add Website Rule</span>
-                    <span class="qa-sub">Block a domain or keyword</span>
+                    <span class="qa-title" data-i18n="dashboard.addWebsiteRule">Add Website Rule</span>
+                    <span class="qa-sub" data-i18n="dashboard.addWebsiteRuleDesc">Block a domain or keyword</span>
                   </div>
                   <i data-lucide="chevron-right" class="qa-arrow"></i>
                 </button>
                 <button class="quick-action-card qa-warning" data-page="apps">
                   <div class="qa-icon"><i data-lucide="monitor"></i></div>
                   <div class="qa-text">
-                    <span class="qa-title">Block Application</span>
-                    <span class="qa-sub">Prevent apps from running</span>
+                    <span class="qa-title" data-i18n="dashboard.blockApplication">Block Application</span>
+                    <span class="qa-sub" data-i18n="dashboard.blockApplicationDesc">Prevent apps from running</span>
                   </div>
                   <i data-lucide="chevron-right" class="qa-arrow"></i>
                 </button>
                 <button class="quick-action-card qa-error" data-page="schedule">
                   <div class="qa-icon"><i data-lucide="calendar-clock"></i></div>
                   <div class="qa-text">
-                    <span class="qa-title">Edit Schedule</span>
-                    <span class="qa-sub">Set blocking hours</span>
+                    <span class="qa-title" data-i18n="dashboard.editSchedule">Edit Schedule</span>
+                    <span class="qa-sub" data-i18n="dashboard.editScheduleDesc">Set blocking hours</span>
                   </div>
                   <i data-lucide="chevron-right" class="qa-arrow"></i>
                 </button>
@@ -145,21 +145,21 @@
         <div class="dashboard-panels">
           <div class="panel">
             <div class="panel-header">
-              <h3><i data-lucide="globe-2"></i> Browser Extensions</h3>
-              <span class="panel-header-hint">Live status</span>
+              <h3><i data-lucide="globe-2"></i> <span data-i18n="dashboard.browserExtensions">Browser Extensions</span></h3>
+              <span class="panel-header-hint" data-i18n="dashboard.liveStatus">Live status</span>
             </div>
             <div class="panel-body" id="dashboard-browser-status">
-              <div class="empty-state">Checking browsers...</div>
+              <div class="empty-state" data-i18n="status.checkingBrowsers">Checking browsers...</div>
             </div>
           </div>
 
           <div class="panel recent-activity-panel" style="margin-bottom:0;">
             <div class="panel-header">
-              <h3><i data-lucide="activity"></i> Recent Activity</h3>
-              <span class="panel-header-hint">Last 24 hours</span>
+              <h3><i data-lucide="activity"></i> <span data-i18n="dashboard.recentActivity">Recent Activity</span></h3>
+              <span class="panel-header-hint" data-i18n="dashboard.last24Hours">Last 24 hours</span>
             </div>
             <div class="panel-body" id="dashboard-recent-activity">
-              <div class="empty-state">No activity yet — blocked attempts will appear here</div>
+              <div class="empty-state" data-i18n="dashboard.noActivity">No activity yet — blocked attempts will appear here</div>
             </div>
           </div>
         </div>
@@ -191,29 +191,29 @@
         <!-- Websites Tab -->
         <div id="websites-tab-block" class="tab-content active">
           <div class="panel overflow-visible" style="margin-bottom:14px;">
-            <div class="panel-header"><h3><i data-lucide="plus-circle"></i> Add Website</h3></div>
+            <div class="panel-header"><h3><i data-lucide="plus-circle"></i> <span data-i18n="websites.addWebsite">Add Website</span></h3></div>
             <div class="panel-body">
               <div class="add-website-row">
                 <div class="add-website-fields">
-                  <select id="website-list-select" class="input"><option value="">Select list...</option></select>
-                  <select id="website-type-select" class="input"><option value="domain">Domain</option><option value="keyword">Keyword</option><option value="wildcard">Wildcard</option><option value="url_path">URL Path</option></select>
-                  <input type="text" id="website-input" class="input" placeholder="e.g. reddit.com">
-                  <button class="btn btn-primary" id="btn-add-website"><i data-lucide="plus"></i> Add</button>
+                  <select id="website-list-select" class="input"><option value="" data-i18n="common.selectList">Select list...</option></select>
+                  <select id="website-type-select" class="input"><option value="domain" data-i18n="common.domain">Domain</option><option value="keyword" data-i18n="common.keyword">Keyword</option><option value="wildcard" data-i18n="common.wildcard">Wildcard</option><option value="url_path" data-i18n="common.urlPath">URL Path</option></select>
+                  <input type="text" id="website-input" class="input" data-i18n-placeholder="websites.placeholderDomain" placeholder="e.g. reddit.com">
+                  <button class="btn btn-primary" id="btn-add-website"><i data-lucide="plus"></i> <span data-i18n="common.add">Add</span></button>
                 </div>
                 <div class="add-website-actions">
                   <div class="dropdown-wrap">
-                    <button class="btn btn-secondary btn-sm" id="btn-import-dropdown"><i data-lucide="download"></i> Import</button>
+                    <button class="btn btn-secondary btn-sm" id="btn-import-dropdown"><i data-lucide="download"></i> <span data-i18n="common.import">Import</span></button>
                     <div class="dropdown-menu hidden" id="import-dropdown">
-                      <button class="dropdown-item" data-action="import-text"><i data-lucide="file-text"></i> Import from text file</button>
-                      <button class="dropdown-item" data-action="import-json"><i data-lucide="file-json"></i> Import from JSON file</button>
+                      <button class="dropdown-item" data-action="import-text"><i data-lucide="file-text"></i> <span data-i18n="websites.importFromText">Import from text file</span></button>
+                      <button class="dropdown-item" data-action="import-json"><i data-lucide="file-json"></i> <span data-i18n="websites.importFromJson">Import from JSON file</span></button>
                       <div class="dropdown-divider"></div>
                       <div class="dropdown-item-sub">
-                        <span class="dropdown-item-sub-label">Pre-made lists</span>
+                        <span class="dropdown-item-sub-label" data-i18n="websites.premadeLists">Pre-made lists</span>
                         <div class="dropdown-submenu" id="premade-list-items"></div>
                       </div>
                       <div class="dropdown-divider"></div>
-                      <button class="dropdown-item" data-action="import-keyword-prompt"><i data-lucide="text-search"></i> All URLs containing...</button>
-                      <button class="dropdown-item" data-action="import-entire-internet"><i data-lucide="earth-lock"></i> Block entire internet</button>
+                      <button class="dropdown-item" data-action="import-keyword-prompt"><i data-lucide="text-search"></i> <span data-i18n="websites.allUrlsContaining">All URLs containing...</span></button>
+                      <button class="dropdown-item" data-action="import-entire-internet"><i data-lucide="earth-lock"></i> <span data-i18n="websites.blockEntireInternet">Block entire internet</span></button>
                     </div>
                   </div>
                 </div>
@@ -222,60 +222,60 @@
           </div>
           <div class="panel fill-remaining">
             <div class="panel-header">
-              <h3><i data-lucide="list"></i> Blocked Websites</h3>
+              <h3><i data-lucide="list"></i> <span data-i18n="websites.blockedWebsites">Blocked Websites</span></h3>
               <div style="display:flex;gap:8px;align-items:center;">
-                <input type="text" class="input search-input" id="search-websites" placeholder="Search websites...">
-                <button class="btn btn-danger btn-sm" data-action="clear-all-websites"><i data-lucide="trash-2"></i> Clear All</button>
+                <input type="text" class="input search-input" id="search-websites" data-i18n-placeholder="websites.searchWebsites" placeholder="Search websites...">
+                <button class="btn btn-danger btn-sm" data-action="clear-all-websites"><i data-lucide="trash-2"></i> <span data-i18n="common.clearAll">Clear All</span></button>
               </div>
             </div>
-            <div class="panel-body" id="websites-list"><div class="empty-state">No websites blocked</div></div>
+            <div class="panel-body" id="websites-list"><div class="empty-state" data-i18n="websites.noWebsitesBlocked">No websites blocked</div></div>
           </div>
         </div>
 
         <!-- Exceptions Tab -->
         <div id="websites-tab-exceptions" class="tab-content">
           <div class="panel overflow-visible" style="margin-bottom:14px;">
-            <div class="panel-header"><h3><i data-lucide="shield-off"></i> Add Exception</h3></div>
+            <div class="panel-header"><h3><i data-lucide="shield-off"></i> <span data-i18n="websites.addException">Add Exception</span></h3></div>
             <div class="panel-body">
-              <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">Excepted domains will NOT be blocked even if they match a blocking rule.</p>
+              <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px;" data-i18n="websites.exceptionHint">Excepted domains will NOT be blocked even if they match a blocking rule.</p>
               <div class="add-website-fields">
-                <select id="exception-list-select" class="input"><option value="">Select list...</option></select>
-                <input type="text" id="exception-input" class="input" placeholder="e.g. docs.google.com">
-                <button class="btn btn-primary" id="btn-add-exception"><i data-lucide="plus"></i> Add Exception</button>
+                <select id="exception-list-select" class="input"><option value="" data-i18n="common.selectList">Select list...</option></select>
+                <input type="text" id="exception-input" class="input" data-i18n-placeholder="websites.placeholderException" placeholder="e.g. docs.google.com">
+                <button class="btn btn-primary" id="btn-add-exception"><i data-lucide="plus"></i> <span data-i18n="websites.addExceptionBtn">Add Exception</span></button>
               </div>
             </div>
           </div>
           <div class="panel fill-remaining">
-            <div class="panel-header"><h3><i data-lucide="check-circle"></i> Exceptions (Whitelist)</h3></div>
-            <div class="panel-body" id="exceptions-list"><div class="empty-state">No exceptions — all matching sites will be blocked</div></div>
+            <div class="panel-header"><h3><i data-lucide="check-circle"></i> <span data-i18n="websites.exceptionsHeading">Exceptions (Whitelist)</span></h3></div>
+            <div class="panel-body" id="exceptions-list"><div class="empty-state" data-i18n="websites.noExceptions">No exceptions — all matching sites will be blocked</div></div>
           </div>
         </div>
 
         <!-- Allowances Tab -->
         <div id="websites-tab-allowances" class="tab-content">
           <div class="panel overflow-visible" style="margin-bottom:14px;">
-            <div class="panel-header"><h3><i data-lucide="plus-circle"></i> Add Allowance</h3></div>
+            <div class="panel-header"><h3><i data-lucide="plus-circle"></i> <span data-i18n="allowance.addAllowance">Add Allowance</span></h3></div>
             <div class="panel-body">
-              <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">
+              <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px;" data-i18n-html="allowance.capDailyHint">
                 Cap daily usage of a site (e.g., <code>youtube.com</code> = 30 min/day). Once the quota is hit, the site is blocked until midnight.
               </p>
               <div class="add-website-fields">
                 <select id="allowance-kind-select" class="input">
-                  <option value="domain">Domain</option>
-                  <option value="app">App executable</option>
+                  <option value="domain" data-i18n="allowance.domainOption">Domain</option>
+                  <option value="app" data-i18n="allowance.appOption">App executable</option>
                 </select>
-                <input type="text" id="allowance-value-input" class="input" placeholder="e.g. youtube.com">
-                <input type="number" id="allowance-minutes-input" class="input" placeholder="Minutes/day" min="1" max="480" value="30" style="max-width:140px;">
+                <input type="text" id="allowance-value-input" class="input" data-i18n-placeholder="allowance.placeholderValue" placeholder="e.g. youtube.com">
+                <input type="number" id="allowance-minutes-input" class="input" data-i18n-placeholder="allowance.placeholderMinutes" placeholder="Minutes/day" min="1" max="480" value="30" style="max-width:140px;">
                 <label class="checkbox-inline" style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted);white-space:nowrap;">
-                  <input type="checkbox" id="allowance-strict-input" checked> Active-tab only
+                  <input type="checkbox" id="allowance-strict-input" checked> <span data-i18n="allowance.activeTabOnly">Active-tab only</span>
                 </label>
-                <button class="btn btn-primary" id="btn-add-allowance"><i data-lucide="plus"></i> Add</button>
+                <button class="btn btn-primary" id="btn-add-allowance"><i data-lucide="plus"></i> <span data-i18n="common.add">Add</span></button>
               </div>
             </div>
           </div>
           <div class="panel fill-remaining">
-            <div class="panel-header"><h3><i data-lucide="hourglass"></i> Your Allowances</h3></div>
-            <div class="panel-body" id="allowances-list"><div class="empty-state">No allowances yet</div></div>
+            <div class="panel-header"><h3><i data-lucide="hourglass"></i> <span data-i18n="allowance.yourAllowances">Your Allowances</span></h3></div>
+            <div class="panel-body" id="allowances-list"><div class="empty-state" data-i18n="allowance.noAllowancesYet">No allowances yet — add one above to cap daily usage.</div></div>
           </div>
         </div>
       </section>
@@ -287,29 +287,29 @@
           <p class="page-subtitle" data-i18n="apps.subtitle">Manage blocked applications and executables</p>
         </header>
         <div class="panel overflow-visible" style="margin-bottom:14px;">
-          <div class="panel-header"><h3><i data-lucide="plus-circle"></i> Add Application</h3></div>
+          <div class="panel-header"><h3><i data-lucide="plus-circle"></i> <span data-i18n="apps.addApplication">Add Application</span></h3></div>
           <div class="panel-body">
             <div class="add-website-row">
               <div class="add-website-fields">
-                <select id="app-list-select" class="input"><option value="">Select list...</option></select>
-                <input type="text" id="app-input" class="input" placeholder="e.g. steam.exe">
-                <button class="btn btn-primary" id="btn-add-app"><i data-lucide="plus"></i> Add</button>
+                <select id="app-list-select" class="input"><option value="" data-i18n="common.selectList">Select list...</option></select>
+                <input type="text" id="app-input" class="input" data-i18n-placeholder="apps.placeholderExe" placeholder="e.g. steam.exe">
+                <button class="btn btn-primary" id="btn-add-app"><i data-lucide="plus"></i> <span data-i18n="common.add">Add</span></button>
               </div>
               <div class="add-website-actions">
-                <button class="btn btn-secondary btn-sm" id="btn-browse-apps"><i data-lucide="folder-search"></i> Browse Apps</button>
+                <button class="btn btn-secondary btn-sm" id="btn-browse-apps"><i data-lucide="folder-search"></i> <span data-i18n="apps.browseApps">Browse Apps</span></button>
               </div>
             </div>
           </div>
         </div>
         <div class="panel fill-remaining">
           <div class="panel-header">
-            <h3><i data-lucide="list"></i> Blocked Applications</h3>
+            <h3><i data-lucide="list"></i> <span data-i18n="apps.blockedApplications">Blocked Applications</span></h3>
             <div style="display:flex;gap:8px;align-items:center;">
-              <input type="text" class="input search-input" id="search-apps" placeholder="Search apps...">
-              <button class="btn btn-danger btn-sm" data-action="clear-all-apps"><i data-lucide="trash-2"></i> Clear All</button>
+              <input type="text" class="input search-input" id="search-apps" data-i18n-placeholder="apps.searchApps" placeholder="Search apps...">
+              <button class="btn btn-danger btn-sm" data-action="clear-all-apps"><i data-lucide="trash-2"></i> <span data-i18n="common.clearAll">Clear All</span></button>
             </div>
           </div>
-          <div class="panel-body" id="apps-list"><div class="empty-state">No applications blocked</div></div>
+          <div class="panel-body" id="apps-list"><div class="empty-state" data-i18n="apps.noAppsBlocked">No applications blocked</div></div>
         </div>
       </section>
 
@@ -325,23 +325,23 @@
           <div class="panel-body" style="padding:16px 20px;">
             <div class="schedule-controls">
               <div class="schedule-control-group">
-                <label class="schedule-control-label">Block list</label>
-                <select id="schedule-list-select" class="input" style="width:220px;"><option value="">Select list...</option></select>
+                <label class="schedule-control-label" data-i18n="schedule.blockList">Block list</label>
+                <select id="schedule-list-select" class="input" style="width:220px;"><option value="" data-i18n="common.selectList">Select list...</option></select>
               </div>
               <div class="schedule-control-group">
-                <label class="schedule-control-label">Mode</label>
+                <label class="schedule-control-label" data-i18n="schedule.mode">Mode</label>
                 <div class="schedule-mode-toggle">
                   <button type="button" class="schedule-mode-btn active" id="mode-always">
-                    <i data-lucide="infinity"></i> Always Active
+                    <i data-lucide="infinity"></i> <span data-i18n="schedule.alwaysActive">Always Active</span>
                   </button>
                   <button type="button" class="schedule-mode-btn" id="mode-scheduled">
-                    <i data-lucide="calendar-clock"></i> Scheduled
+                    <i data-lucide="calendar-clock"></i> <span data-i18n="schedule.scheduled">Scheduled</span>
                   </button>
                 </div>
               </div>
               <div class="schedule-summary" id="schedule-summary">
                 <div class="schedule-summary-value" id="schedule-summary-value">—</div>
-                <div class="schedule-summary-label" id="schedule-summary-label">Select a block list</div>
+                <div class="schedule-summary-label" id="schedule-summary-label" data-i18n="schedule.selectBlockList">Select a block list</div>
               </div>
             </div>
           </div>
@@ -354,8 +354,8 @@
               <i data-lucide="infinity"></i>
             </div>
             <div class="schedule-hero-text">
-              <div class="schedule-hero-title">24/7 Blocking Active</div>
-              <div class="schedule-hero-sub">This block list is enforced at all times. Switch to <strong>Scheduled</strong> mode to set specific hours.</div>
+              <div class="schedule-hero-title" data-i18n="schedule.blocking247">24/7 Blocking Active</div>
+              <div class="schedule-hero-sub" data-i18n-html="schedule.blocking247Desc">This block list is enforced at all times. Switch to <strong>Scheduled</strong> mode to set specific hours.</div>
             </div>
           </div>
         </div>
@@ -363,14 +363,14 @@
         <!-- Schedule grid panel (shown when mode is Scheduled) -->
         <div class="panel" id="schedule-grid-panel" style="min-width:0;overflow:hidden;display:none;">
           <div class="panel-header">
-            <h3><i data-lucide="calendar-clock"></i> Weekly Schedule</h3>
+            <h3><i data-lucide="calendar-clock"></i> <span data-i18n="schedule.weeklySchedule">Weekly Schedule</span></h3>
             <div class="schedule-presets">
-              <button type="button" class="schedule-preset-btn" data-preset="weekdays-work">Weekdays 9–5</button>
-              <button type="button" class="schedule-preset-btn" data-preset="evenings">Evenings 6–11</button>
-              <button type="button" class="schedule-preset-btn" data-preset="weekends">Weekends</button>
-              <button type="button" class="schedule-preset-btn" data-preset="all">All hours</button>
+              <button type="button" class="schedule-preset-btn" data-preset="weekdays-work" data-i18n="schedule.weekdaysWork">Weekdays 9–5</button>
+              <button type="button" class="schedule-preset-btn" data-preset="evenings" data-i18n="schedule.evenings">Evenings 6–11</button>
+              <button type="button" class="schedule-preset-btn" data-preset="weekends" data-i18n="schedule.weekends">Weekends</button>
+              <button type="button" class="schedule-preset-btn" data-preset="all" data-i18n="schedule.allHours">All hours</button>
               <button type="button" class="schedule-preset-btn btn-clear-preset" id="btn-clear-schedule">
-                <i data-lucide="eraser"></i> Clear
+                <i data-lucide="eraser"></i> <span data-i18n="common.clear">Clear</span>
               </button>
             </div>
           </div>
@@ -387,11 +387,11 @@
             </div>
             <div class="schedule-footer">
               <div class="schedule-legend">
-                <span class="legend-item"><span class="legend-dot active"></span> Blocking active</span>
-                <span class="legend-item"><span class="legend-dot"></span> Not blocking</span>
+                <span class="legend-item"><span class="legend-dot active"></span> <span data-i18n="schedule.blockingActive">Blocking active</span></span>
+                <span class="legend-item"><span class="legend-dot"></span> <span data-i18n="schedule.notBlocking">Not blocking</span></span>
               </div>
               <div class="schedule-tip">
-                <i data-lucide="mouse-pointer-click"></i> Click and drag to select multiple hours
+                <i data-lucide="mouse-pointer-click"></i> <span data-i18n="schedule.clickDragHint">Click and drag to select multiple hours</span>
               </div>
             </div>
           </div>
@@ -404,8 +404,8 @@
               <div class="dashboard-empty-icon">
                 <i data-lucide="calendar-clock"></i>
               </div>
-              <div class="dashboard-empty-title">Select a block list</div>
-              <div class="dashboard-empty-sub">Choose a block list above to configure its schedule</div>
+              <div class="dashboard-empty-title" data-i18n="schedule.selectBlockList">Select a block list</div>
+              <div class="dashboard-empty-sub" data-i18n="schedule.selectBlockListDesc">Choose a block list above to configure its schedule</div>
             </div>
           </div>
         </div>
@@ -429,7 +429,7 @@
         <!-- Charts row: two charts side by side taking full width -->
         <div class="stats-charts-row">
           <div class="panel stats-chart-panel">
-            <div class="panel-header"><h3><i data-lucide="trending-up"></i> Timeline</h3></div>
+            <div class="panel-header"><h3><i data-lucide="trending-up"></i> <span data-i18n="statistics.timeline">Timeline</span></h3></div>
             <div class="panel-body" style="position:relative;flex:1;min-height:0;">
               <canvas id="stats-line-chart" style="width:100%;height:100%;"></canvas>
               <div id="stats-line-tooltip" style="display:none;position:absolute;pointer-events:none;background:var(--bg-elevated);border:1px solid var(--border-hover);border-radius:10px;padding:10px 14px;font-size:12px;box-shadow:var(--shadow-lg);z-index:10;min-width:160px;"></div>
@@ -437,7 +437,7 @@
             <div id="stats-line-legend" style="display:flex;flex-wrap:wrap;gap:12px;padding:6px 16px 10px;border-top:1px solid var(--border);flex-shrink:0;"></div>
           </div>
           <div class="panel stats-chart-panel">
-            <div class="panel-header"><h3><i data-lucide="bar-chart-3"></i> Daily Overview</h3></div>
+            <div class="panel-header"><h3><i data-lucide="bar-chart-3"></i> <span data-i18n="statistics.dailyOverview">Daily Overview</span></h3></div>
             <div class="panel-body" style="position:relative;flex:1;min-height:0;">
               <canvas id="stats-chart" style="width:100%;height:100%;"></canvas>
               <div id="stats-tooltip" style="display:none;position:absolute;pointer-events:none;background:var(--bg-elevated);border:1px solid var(--border-hover);border-radius:10px;padding:10px 14px;font-size:12px;box-shadow:var(--shadow-lg);z-index:10;min-width:140px;"></div>
@@ -447,19 +447,19 @@
         </div>
         <!-- Blocked attempts: compact with scroll -->
         <div class="panel stats-table-panel">
-          <div class="panel-header"><h3><i data-lucide="table"></i> Blocked Attempts</h3></div>
-          <div class="panel-body stats-table-body" id="stats-content"><div class="empty-state">No data yet. Blocked attempts will appear here.</div></div>
+          <div class="panel-header"><h3><i data-lucide="table"></i> <span data-i18n="statistics.blockedAttempts">Blocked Attempts</span></h3></div>
+          <div class="panel-body stats-table-body" id="stats-content"><div class="empty-state" data-i18n="statistics.noStatsYet">No data yet. Blocked attempts will appear here.</div></div>
         </div>
 
         <!-- Focus history: Pomodoro sessions + allowance usage -->
         <div class="dashboard-panels" style="flex-shrink:0;margin-top:14px;">
           <div class="panel">
-            <div class="panel-header"><h3><i data-lucide="timer"></i> Pomodoro Sessions</h3><span class="panel-header-hint">Last 30 days</span></div>
-            <div class="panel-body" id="stats-pomodoro-history"><div class="empty-state">No sessions yet</div></div>
+            <div class="panel-header"><h3><i data-lucide="timer"></i> <span data-i18n="statistics.pomodoroSessions">Pomodoro Sessions</span></h3><span class="panel-header-hint" data-i18n="statistics.last30Days">Last 30 days</span></div>
+            <div class="panel-body" id="stats-pomodoro-history"><div class="empty-state" data-i18n="statistics.noSessions">No sessions yet — start a Pomodoro from the Dashboard</div></div>
           </div>
           <div class="panel">
-            <div class="panel-header"><h3><i data-lucide="hourglass"></i> Allowance Usage</h3><span class="panel-header-hint">Today's summary</span></div>
-            <div class="panel-body" id="stats-allowance-summary"><div class="empty-state">No allowances</div></div>
+            <div class="panel-header"><h3><i data-lucide="hourglass"></i> <span data-i18n="statistics.allowanceUsage">Allowance Usage</span></h3><span class="panel-header-hint" data-i18n="statistics.todaysSummary">Today's summary</span></div>
+            <div class="panel-body" id="stats-allowance-summary"><div class="empty-state" data-i18n="statistics.noAllowances">No allowances</div></div>
           </div>
         </div>
       </section>
@@ -579,20 +579,20 @@
   <!-- Modal -->
   <div id="modal-overlay" class="modal-overlay hidden">
     <div class="modal">
-      <div class="modal-header"><h3 id="modal-title">Create Block List</h3><button class="modal-close" id="btn-modal-close">&times;</button></div>
+      <div class="modal-header"><h3 id="modal-title" data-i18n="modal.createBlockList">Create Block List</h3><button class="modal-close" id="btn-modal-close">&times;</button></div>
       <div class="modal-body" id="modal-body"></div>
-      <div class="modal-footer"><button class="btn btn-secondary" id="btn-modal-cancel">Cancel</button><button class="btn btn-primary" id="modal-confirm">Create</button></div>
+      <div class="modal-footer"><button class="btn btn-secondary" id="btn-modal-cancel" data-i18n="common.cancel">Cancel</button><button class="btn btn-primary" id="modal-confirm" data-i18n="common.create">Create</button></div>
     </div>
   </div>
 
   <!-- Confirm Dialog -->
   <div id="confirm-overlay" class="modal-overlay hidden">
     <div class="modal confirm-dialog">
-      <div class="modal-header"><h3 id="confirm-title">Confirm</h3></div>
+      <div class="modal-header"><h3 id="confirm-title" data-i18n="confirm.title">Confirm</h3></div>
       <div class="modal-body"><p id="confirm-message"></p></div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" id="confirm-cancel">Cancel</button>
-        <button class="btn btn-danger" id="confirm-ok">Confirm</button>
+        <button class="btn btn-secondary" id="confirm-cancel" data-i18n="common.cancel">Cancel</button>
+        <button class="btn btn-danger" id="confirm-ok" data-i18n="common.confirm">Confirm</button>
       </div>
     </div>
   </div>
