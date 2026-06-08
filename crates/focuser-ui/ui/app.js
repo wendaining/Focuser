@@ -2493,23 +2493,28 @@ document.addEventListener('DOMContentLoaded', async function() {
   var bi = document.getElementById('btn-import-dropdown'); if (bi) bi.addEventListener('click', function(e) { e.stopPropagation(); ui.toggleImportDropdown(); });
   var bb = document.getElementById('btn-browse-apps'); if (bb) bb.addEventListener('click', function() { ui.browseApps(); });
 
-  // Language selector
-  var langSel = document.getElementById('setting-language');
-  if (langSel) {
-    langSel.value = i18n.locale;
-    langSel.addEventListener('change', async function() {
-      var newLocale = this.value;
+  // Language switch buttons
+  document.querySelectorAll('.lang-btn').forEach(function(btn) {
+    btn.addEventListener('click', async function() {
+      var newLocale = this.getAttribute('data-lang');
+      if (newLocale === i18n.locale) return;
       var ok = await i18n.setLocale(newLocale);
       if (ok) {
-        // Re-render current page and re-wire all event handlers
-        // The page needs a full re-render since all text changed
+        // Update active button state
+        document.querySelectorAll('.lang-btn').forEach(function(b) {
+          b.classList.toggle('active', b.getAttribute('data-lang') === newLocale);
+        });
+        // Re-render current page
         if (state.currentPage) ui.navigateTo(state.currentPage);
       } else {
-        toast(t('toast.importFailed', { error: 'Failed to switch language' }), 'error');
-        this.value = i18n.locale;
+        toast(t('common.failed', { error: 'Failed to switch language' }), 'error');
       }
     });
-  }
+  });
+  // Set initial active button
+  document.querySelectorAll('.lang-btn').forEach(function(b) {
+    b.classList.toggle('active', b.getAttribute('data-lang') === i18n.locale);
+  });
 
   // Real-time search filters
   var sw = document.getElementById('search-websites');
