@@ -7,6 +7,7 @@ pub mod ipc;
 pub mod platform;
 pub mod pomodoro;
 pub mod schedule;
+pub mod settings;
 pub mod types;
 
 pub use error::{FocuserError, Result};

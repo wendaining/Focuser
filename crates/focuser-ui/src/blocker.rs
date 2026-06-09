@@ -8,15 +8,16 @@ use std::time::{Duration, Instant};
 
 use focuser_common::browser::identify_browser;
 use focuser_common::extension::BrowserType;
+use focuser_common::settings::{
+    DEFAULT_EXTENSION_GRACE_PERIOD_SECS, SETTING_BLOCK_UNSUPPORTED_BROWSERS,
+    SETTING_EXTENSION_GRACE_PERIOD,
+};
 use tracing::{info, warn};
 
 use crate::AppState;
 
 const HOSTS_BEGIN: &str = "# ──── BEGIN FOCUSER BLOCK ────";
 const HOSTS_END: &str = "# ──── END FOCUSER BLOCK ────";
-
-/// Default grace period before killing browsers without the extension.
-const DEFAULT_GRACE_PERIOD_SECS: u64 = 60;
 
 /// Runs the blocking loop in a background thread.
 /// Every 3 seconds: re-sync hosts file, check for blocked processes,
@@ -31,15 +32,16 @@ pub fn run_blocking_loop(state: Arc<AppState>) {
     // Read settings
     let (grace_secs, enforce_enabled) = {
         let eng = state.engine.lock().unwrap();
+        let default_grace_seconds = DEFAULT_EXTENSION_GRACE_PERIOD_SECS.to_string();
         let grace = eng
             .db()
-            .get_setting_or_default("extension_grace_period", "60")
-            .unwrap_or_else(|_| "60".to_string())
+            .get_setting_or_default(SETTING_EXTENSION_GRACE_PERIOD, &default_grace_seconds)
+            .unwrap_or_else(|_| default_grace_seconds)
             .parse::<u64>()
-            .unwrap_or(DEFAULT_GRACE_PERIOD_SECS);
+            .unwrap_or(DEFAULT_EXTENSION_GRACE_PERIOD_SECS);
         let enabled = eng
             .db()
-            .get_setting_or_default("block_unsupported_browsers", "true")
+            .get_setting_or_default(SETTING_BLOCK_UNSUPPORTED_BROWSERS, "true")
             .unwrap_or_else(|_| "true".to_string())
             .parse::<bool>()
             .unwrap_or(true);

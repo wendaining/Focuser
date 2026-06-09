@@ -7,6 +7,10 @@ use std::time::Instant;
 use anyhow::Result;
 use focuser_common::extension::BrowserType;
 use focuser_common::ipc::*;
+use focuser_common::settings::{
+    DEFAULT_EXTENSION_GRACE_PERIOD_SECS, SETTING_BLOCK_UNSUPPORTED_BROWSERS,
+    SETTING_EXTENSION_GRACE_PERIOD,
+};
 use focuser_core::BlockEngine;
 use tokio::time::{Duration, interval};
 use tracing::{debug, error, info, warn};
@@ -40,15 +44,16 @@ impl FocuserService {
             Arc::from(platform::create_blocker());
 
         // Read enforcement settings
+        let default_grace_seconds = DEFAULT_EXTENSION_GRACE_PERIOD_SECS.to_string();
         let grace_seconds = engine
             .db()
-            .get_setting_or_default("extension_grace_period", "60")
-            .unwrap_or_else(|_| "60".to_string())
+            .get_setting_or_default(SETTING_EXTENSION_GRACE_PERIOD, &default_grace_seconds)
+            .unwrap_or_else(|_| default_grace_seconds)
             .parse::<u64>()
-            .unwrap_or(60);
+            .unwrap_or(DEFAULT_EXTENSION_GRACE_PERIOD_SECS);
         let enforce_browsers = engine
             .db()
-            .get_setting_or_default("block_unsupported_browsers", "true")
+            .get_setting_or_default(SETTING_BLOCK_UNSUPPORTED_BROWSERS, "true")
             .unwrap_or_else(|_| "true".to_string())
             .parse::<bool>()
             .unwrap_or(true);
