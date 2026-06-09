@@ -2458,6 +2458,10 @@ document.addEventListener('DOMContentLoaded', async function() {
       ui._pomodoroNotifEnabled = (notif !== 'false');
       var pn = document.getElementById('setting-pomo-notifications');
       if (pn) pn.checked = ui._pomodoroNotifEnabled;
+
+      var browserEnforcement = await invoke('get_setting', { key: 'block_unsupported_browsers', default: 'false' });
+      var beToggle = document.getElementById('setting-block-unsupported-browsers');
+      if (beToggle) beToggle.checked = (browserEnforcement === 'true');
     } catch (e) {}
   })();
 
@@ -2478,6 +2482,11 @@ document.addEventListener('DOMContentLoaded', async function() {
   if (pn) pn.addEventListener('change', function() {
     ui._pomodoroNotifEnabled = this.checked;
     invoke('set_setting', { key: 'focus_pomo_notifications', value: this.checked ? 'true' : 'false' })
+      .catch(function() {});
+  });
+  var beToggle = document.getElementById('setting-block-unsupported-browsers');
+  if (beToggle) beToggle.addEventListener('change', function() {
+    invoke('set_setting', { key: 'block_unsupported_browsers', value: this.checked ? 'true' : 'false' })
       .catch(function() {});
   });
   var rInput = document.getElementById('setting-retention-input');

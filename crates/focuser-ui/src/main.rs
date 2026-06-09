@@ -350,7 +350,7 @@ fn build_extension_modal_js(browser_name: &str) -> String {
 
   var msg = document.createElement('p');
   msg.style.cssText = 'font-size:14px;line-height:1.6;color:#b0b0bc;margin-bottom:24px';
-  msg.innerHTML = 'Focuser closed <strong style="color:#f0f0f3">{browser_name}</strong> because the Focuser browser extension is not installed.<br><br>Install the extension from the <strong style="color:#f0f0f3">{store_label}</strong> to continue using {browser_name} while blocks are active.';
+  msg.innerHTML = 'Browser enforcement closed <strong style="color:#f0f0f3">{browser_name}</strong> because the Focuser browser extension is not connected.<br><br>Install the extension from the <strong style="color:#f0f0f3">{store_label}</strong> to continue using {browser_name} while blocks are active.';
 
   var btnRow = document.createElement('div');
   btnRow.style.cssText = 'display:flex;gap:12px;flex-direction:column';

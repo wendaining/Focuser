@@ -374,6 +374,8 @@
     "allowanceStrictDefaultDesc": "默认启用时，新配额仅统计当前聚焦标签页的使用时间",
     "phaseChangeNotifications": "阶段切换通知",
     "phaseChangeNotificationsDesc": "番茄钟工作/休息阶段切换时显示提示",
+    "browserEnforcement": "关闭未连接扩展的浏览器",
+    "browserEnforcementDesc": "开启后，有活动拦截时，未连接 Focuser 扩展的浏览器会在宽限期后被关闭",
     "importExport": "导入 / 导出",
     "exportConfig": "导出配置",
     "exportConfigDesc": "将拦截列表、规则和时间表保存到文件",
@@ -459,7 +461,7 @@
 
   "browser": {
     "extensionRequired": "需要扩展",
-    "extensionRequiredMsg": "Focuser 关闭了 {{browser}}，因为未安装 Focuser 浏览器扩展。",
+    "extensionRequiredMsg": "浏览器强制策略关闭了 {{browser}}，因为未连接 Focuser 浏览器扩展。",
     "installExtensionFor": "为 {{browser}} 安装扩展",
     "dismiss": "忽略",
     "installFromStore": "从 {{store}} 安装扩展以在拦截生效时继续使用 {{browser}}。"

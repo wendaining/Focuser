@@ -374,6 +374,8 @@
     "allowanceStrictDefaultDesc": "When enabled by default, new allowances only count time from the currently focused tab",
     "phaseChangeNotifications": "Phase-change notifications",
     "phaseChangeNotificationsDesc": "Show a toast when Pomodoro work/break phases change",
+    "browserEnforcement": "Close browsers without extension",
+    "browserEnforcementDesc": "When enabled, active blocks close browsers that do not have the Focuser extension connected after a grace period",
     "importExport": "Import / Export",
     "exportConfig": "Export configuration",
     "exportConfigDesc": "Save your block lists, rules, and schedules to a file",
@@ -459,7 +461,7 @@
 
   "browser": {
     "extensionRequired": "Extension Required",
-    "extensionRequiredMsg": "Focuser closed {{browser}} because the Focuser browser extension is not installed.",
+    "extensionRequiredMsg": "Browser enforcement closed {{browser}} because the Focuser browser extension is not connected.",
     "installExtensionFor": "Install Extension for {{browser}}",
     "dismiss": "Dismiss",
     "installFromStore": "Install the extension from the {{store}} to continue using {{browser}} while blocks are active."
