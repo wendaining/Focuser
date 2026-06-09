@@ -8,8 +8,8 @@ use anyhow::Result;
 use focuser_common::extension::BrowserType;
 use focuser_common::ipc::*;
 use focuser_common::settings::{
-    DEFAULT_EXTENSION_GRACE_PERIOD_SECS, SETTING_BLOCK_UNSUPPORTED_BROWSERS,
-    SETTING_EXTENSION_GRACE_PERIOD,
+    DEFAULT_BLOCK_UNSUPPORTED_BROWSERS, DEFAULT_EXTENSION_GRACE_PERIOD_SECS,
+    SETTING_BLOCK_UNSUPPORTED_BROWSERS, SETTING_EXTENSION_GRACE_PERIOD,
 };
 use focuser_core::BlockEngine;
 use tokio::time::{Duration, interval};
@@ -43,20 +43,7 @@ impl FocuserService {
         let blocker: Arc<dyn focuser_common::platform::PlatformBlocker> =
             Arc::from(platform::create_blocker());
 
-        // Read enforcement settings
-        let default_grace_seconds = DEFAULT_EXTENSION_GRACE_PERIOD_SECS.to_string();
-        let grace_seconds = engine
-            .db()
-            .get_setting_or_default(SETTING_EXTENSION_GRACE_PERIOD, &default_grace_seconds)
-            .unwrap_or_else(|_| default_grace_seconds)
-            .parse::<u64>()
-            .unwrap_or(DEFAULT_EXTENSION_GRACE_PERIOD_SECS);
-        let enforce_browsers = engine
-            .db()
-            .get_setting_or_default(SETTING_BLOCK_UNSUPPORTED_BROWSERS, "true")
-            .unwrap_or_else(|_| "true".to_string())
-            .parse::<bool>()
-            .unwrap_or(true);
+        let (grace_seconds, enforce_browsers) = read_browser_enforcement_settings(&engine);
 
         info!(
             grace_seconds,
@@ -355,7 +342,18 @@ fn handle_request(
         IpcRequest::SetSetting { key, value } => {
             let eng = engine.lock().unwrap();
             match eng.db().set_setting(&key, &value) {
-                Ok(()) => IpcResponse::Ok,
+                Ok(()) => {
+                    if key == SETTING_BLOCK_UNSUPPORTED_BROWSERS
+                        || key == SETTING_EXTENSION_GRACE_PERIOD
+                    {
+                        let (grace_seconds, enforce_browsers) =
+                            read_browser_enforcement_settings(&eng);
+                        if let Ok(mut enf) = enforcement.lock() {
+                            enf.update_settings(grace_seconds, enforce_browsers);
+                        }
+                    }
+                    IpcResponse::Ok
+                }
                 Err(e) => IpcResponse::Error(e.to_string()),
             }
         }
@@ -587,5 +585,75 @@ fn handle_request(
             info!("Shutdown requested via IPC");
             std::process::exit(0);
         }
+    }
+}
+
+fn read_browser_enforcement_settings(engine: &BlockEngine) -> (u64, bool) {
+    let default_grace_seconds = DEFAULT_EXTENSION_GRACE_PERIOD_SECS.to_string();
+    let grace_seconds = engine
+        .db()
+        .get_setting_or_default(SETTING_EXTENSION_GRACE_PERIOD, &default_grace_seconds)
+        .unwrap_or(default_grace_seconds)
+        .parse::<u64>()
+        .unwrap_or(DEFAULT_EXTENSION_GRACE_PERIOD_SECS);
+
+    let default_enforce_browsers = DEFAULT_BLOCK_UNSUPPORTED_BROWSERS.to_string();
+    let enforce_browsers = engine
+        .db()
+        .get_setting_or_default(
+            SETTING_BLOCK_UNSUPPORTED_BROWSERS,
+            &default_enforce_browsers,
+        )
+        .unwrap_or(default_enforce_browsers)
+        .parse::<bool>()
+        .unwrap_or(DEFAULT_BLOCK_UNSUPPORTED_BROWSERS);
+
+    (grace_seconds, enforce_browsers)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use focuser_core::Database;
+
+    fn test_engine() -> BlockEngine {
+        let db = Database::open_in_memory().unwrap();
+        BlockEngine::new(db).unwrap()
+    }
+
+    #[test]
+    fn browser_enforcement_defaults_to_disabled() {
+        let engine = test_engine();
+
+        let (grace_seconds, enforce_browsers) = read_browser_enforcement_settings(&engine);
+
+        assert_eq!(grace_seconds, DEFAULT_EXTENSION_GRACE_PERIOD_SECS);
+        assert!(!enforce_browsers);
+    }
+
+    #[test]
+    fn browser_enforcement_respects_explicit_true() {
+        let engine = test_engine();
+        engine
+            .db()
+            .set_setting(SETTING_BLOCK_UNSUPPORTED_BROWSERS, "true")
+            .unwrap();
+
+        let (_, enforce_browsers) = read_browser_enforcement_settings(&engine);
+
+        assert!(enforce_browsers);
+    }
+
+    #[test]
+    fn browser_enforcement_invalid_bool_falls_back_to_disabled() {
+        let engine = test_engine();
+        engine
+            .db()
+            .set_setting(SETTING_BLOCK_UNSUPPORTED_BROWSERS, "not-a-bool")
+            .unwrap();
+
+        let (_, enforce_browsers) = read_browser_enforcement_settings(&engine);
+
+        assert!(!enforce_browsers);
     }
 }

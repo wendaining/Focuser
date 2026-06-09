@@ -1,5 +1,5 @@
 //! Background blocking loop — syncs hosts file, kills blocked processes,
-//! and enforces browser extension installation.
+//! and optionally enforces browser extension installation.
 
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -9,8 +9,8 @@ use std::time::{Duration, Instant};
 use focuser_common::browser::identify_browser;
 use focuser_common::extension::BrowserType;
 use focuser_common::settings::{
-    DEFAULT_EXTENSION_GRACE_PERIOD_SECS, SETTING_BLOCK_UNSUPPORTED_BROWSERS,
-    SETTING_EXTENSION_GRACE_PERIOD,
+    DEFAULT_BLOCK_UNSUPPORTED_BROWSERS, DEFAULT_EXTENSION_GRACE_PERIOD_SECS,
+    SETTING_BLOCK_UNSUPPORTED_BROWSERS, SETTING_EXTENSION_GRACE_PERIOD,
 };
 use tracing::{info, warn};
 
@@ -21,37 +21,13 @@ const HOSTS_END: &str = "# ──── END FOCUSER BLOCK ────";
 
 /// Runs the blocking loop in a background thread.
 /// Every 3 seconds: re-sync hosts file, check for blocked processes,
-/// and enforce browser extension installation.
+/// and optionally enforce browser extension installation.
 pub fn run_blocking_loop(state: Arc<AppState>) {
     info!("Background blocker started");
 
     // Browser enforcement state
     let mut grace_periods: HashMap<BrowserType, Instant> = HashMap::new();
     let mut was_using_hosts = true;
-
-    // Read settings
-    let (grace_secs, enforce_enabled) = {
-        let eng = state.engine.lock().unwrap();
-        let default_grace_seconds = DEFAULT_EXTENSION_GRACE_PERIOD_SECS.to_string();
-        let grace = eng
-            .db()
-            .get_setting_or_default(SETTING_EXTENSION_GRACE_PERIOD, &default_grace_seconds)
-            .unwrap_or_else(|_| default_grace_seconds)
-            .parse::<u64>()
-            .unwrap_or(DEFAULT_EXTENSION_GRACE_PERIOD_SECS);
-        let enabled = eng
-            .db()
-            .get_setting_or_default(SETTING_BLOCK_UNSUPPORTED_BROWSERS, "true")
-            .unwrap_or_else(|_| "true".to_string())
-            .parse::<bool>()
-            .unwrap_or(true);
-        (grace, enabled)
-    };
-    let grace_duration = Duration::from_secs(grace_secs);
-
-    if enforce_enabled {
-        info!(grace_secs, "Browser extension enforcement enabled");
-    }
 
     // Cleanup old events on startup (keep 30 days)
     if let Ok(eng) = state.engine.lock() {
@@ -155,12 +131,39 @@ pub fn run_blocking_loop(state: Arc<AppState>) {
             kill_allowance_blocked_apps(&state.allowance_tracker);
 
             // Browser extension enforcement
+            let (grace_secs, enforce_enabled) = read_browser_enforcement_settings(&eng);
             if enforce_enabled {
                 let has_active_blocks = eng.block_lists().iter().any(|l| l.is_effectively_active());
+                let grace_duration = Duration::from_secs(grace_secs);
                 enforce_browser_extension(has_active_blocks, grace_duration, &mut grace_periods);
+            } else {
+                grace_periods.clear();
             }
         }
     }
+}
+
+fn read_browser_enforcement_settings(engine: &focuser_core::BlockEngine) -> (u64, bool) {
+    let default_grace_seconds = DEFAULT_EXTENSION_GRACE_PERIOD_SECS.to_string();
+    let grace_seconds = engine
+        .db()
+        .get_setting_or_default(SETTING_EXTENSION_GRACE_PERIOD, &default_grace_seconds)
+        .unwrap_or(default_grace_seconds)
+        .parse::<u64>()
+        .unwrap_or(DEFAULT_EXTENSION_GRACE_PERIOD_SECS);
+
+    let default_enforce_browsers = DEFAULT_BLOCK_UNSUPPORTED_BROWSERS.to_string();
+    let enforce_browsers = engine
+        .db()
+        .get_setting_or_default(
+            SETTING_BLOCK_UNSUPPORTED_BROWSERS,
+            &default_enforce_browsers,
+        )
+        .unwrap_or(default_enforce_browsers)
+        .parse::<bool>()
+        .unwrap_or(DEFAULT_BLOCK_UNSUPPORTED_BROWSERS);
+
+    (grace_seconds, enforce_browsers)
 }
 
 /// Apply blocks to the system hosts file.

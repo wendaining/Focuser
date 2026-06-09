@@ -31,6 +31,15 @@ impl BrowserEnforcement {
         }
     }
 
+    /// Update enforcement settings without restarting the service.
+    pub fn update_settings(&mut self, grace_seconds: u64, enabled: bool) {
+        self.grace_duration = Duration::from_secs(grace_seconds);
+        self.enabled = enabled;
+        if !enabled {
+            self.grace_periods.clear();
+        }
+    }
+
     /// Evaluate running processes and return PIDs of browsers to terminate.
     ///
     /// A browser is terminated only if:
@@ -109,6 +118,10 @@ impl BrowserEnforcement {
 
     /// Get remaining grace period seconds for a browser type, if any.
     pub fn grace_remaining(&self, browser_type: &BrowserType) -> Option<u64> {
+        if !self.enabled {
+            return None;
+        }
+
         self.grace_periods.get(browser_type).map(|started_at| {
             let elapsed = started_at.elapsed();
             if elapsed >= self.grace_duration {
@@ -120,7 +133,6 @@ impl BrowserEnforcement {
     }
 
     /// Whether enforcement is enabled.
-    #[allow(dead_code)]
     pub fn is_enabled(&self) -> bool {
         self.enabled
     }
@@ -166,6 +178,7 @@ mod tests {
 
         let result = enf.evaluate(&processes, &connected, true);
         assert!(result.is_empty());
+        assert!(enf.grace_remaining(&BrowserType::Chrome).is_none());
     }
 
     #[test]
@@ -216,5 +229,21 @@ mod tests {
         let remaining = enf.grace_remaining(&BrowserType::Chrome);
         assert!(remaining.is_some());
         assert!(remaining.unwrap() <= 60);
+    }
+
+    #[test]
+    fn test_update_settings_disables_and_clears_grace() {
+        let mut enf = BrowserEnforcement::new(60, true);
+        let processes = vec![make_process(chrome_name(), 100)];
+        let connected = HashSet::new();
+
+        enf.evaluate(&processes, &connected, true);
+        assert!(enf.grace_remaining(&BrowserType::Chrome).is_some());
+
+        enf.update_settings(30, false);
+
+        assert!(!enf.is_enabled());
+        assert!(enf.evaluate(&processes, &connected, true).is_empty());
+        assert!(enf.grace_remaining(&BrowserType::Chrome).is_none());
     }
 }
