@@ -131,11 +131,6 @@ impl BrowserEnforcement {
             }
         })
     }
-
-    /// Whether enforcement is enabled.
-    pub fn is_enabled(&self) -> bool {
-        self.enabled
-    }
 }
 
 #[cfg(test)]
@@ -242,7 +237,6 @@ mod tests {
 
         enf.update_settings(30, false);
 
-        assert!(!enf.is_enabled());
         assert!(enf.evaluate(&processes, &connected, true).is_empty());
         assert!(enf.grace_remaining(&BrowserType::Chrome).is_none());
     }
